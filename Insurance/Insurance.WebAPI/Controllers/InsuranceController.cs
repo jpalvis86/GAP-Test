@@ -6,7 +6,6 @@ namespace Insurance.WebAPI.Controllers
     [Route("[controller]")]
     public class InsuranceController : ControllerBase
     {
-
         [HttpGet]
         public IActionResult Get()
         {
