@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Insurance.Repository\Insurance.Repository.csproj" />
     <ProjectReference Include="..\Insurance.WebAPI\Insurance.WebAPI.csproj" />
   </ItemGroup>
 

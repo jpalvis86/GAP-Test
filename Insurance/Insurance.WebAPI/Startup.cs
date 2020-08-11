@@ -29,6 +29,7 @@ namespace Insurance.WebAPI
             services.AddControllers();
 
             InjectServiceDependencies(services);
+            
         }
 
         private static void InjectServiceDependencies(IServiceCollection services)

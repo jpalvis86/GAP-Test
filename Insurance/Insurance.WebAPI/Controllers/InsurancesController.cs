@@ -1,4 +1,4 @@
-﻿using Insurance.WebAPI.Models;
+﻿using Insurance.Core.Models;
 using Insurance.WebAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 

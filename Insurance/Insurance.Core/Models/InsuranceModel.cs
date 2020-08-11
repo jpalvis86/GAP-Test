@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Insurance.WebAPI.Models
+namespace Insurance.Core.Models
 {
     public class InsuranceModel
     {

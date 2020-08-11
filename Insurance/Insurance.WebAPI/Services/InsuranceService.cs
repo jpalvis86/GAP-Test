@@ -1,11 +1,17 @@
-﻿using Insurance.WebAPI.Models;
+﻿using Insurance.Core.Models;
+using Insurance.Repository;
 using System.Collections.Generic;
 
 namespace Insurance.WebAPI.Services
 {
     public class InsuranceService : IInsuranceService
     {
-        // TODO: Implement methods
+        private readonly IInsuranceRepository _insuranceRepository;
+
+        public InsuranceService(IInsuranceRepository insuranceRepository)
+        {
+            _insuranceRepository = insuranceRepository;
+        }
 
         public InsuranceModel Add(InsuranceModel insurance)
         {
@@ -19,7 +25,7 @@ namespace Insurance.WebAPI.Services
 
         public IEnumerable<InsuranceModel> GetAll()
         {
-            return new List<InsuranceModel>();
+            return _insuranceRepository.Get();
         }
 
         public void Delete(int insuranceId)

@@ -1,4 +1,4 @@
-﻿using Insurance.WebAPI.Models;
+﻿using Insurance.Core.Models;
 using System.Collections.Generic;
 
 namespace Insurance.WebAPI.Services
