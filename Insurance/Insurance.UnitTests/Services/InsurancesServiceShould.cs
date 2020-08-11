@@ -211,6 +211,27 @@ namespace Insurance.UnitTests.Services
             returnedInsurance.Price.Should().Be(updatedInsurance.Price);
         }
 
+        [Theory]
+        [InlineData(InsuranceInvalidModelScenarioEnum.StartDateIsNotValid)]
+        [InlineData(InsuranceInvalidModelScenarioEnum.CoverageRateIsNotValid)]
+        [InlineData(InsuranceInvalidModelScenarioEnum.CoverageRateNotValidForTheRiskProfile)]
+        [InlineData(InsuranceInvalidModelScenarioEnum.MonthsPeriodIsNotValid)]
+        [InlineData(InsuranceInvalidModelScenarioEnum.PriceIsNotValid)]
+        public void ThrowAnExceptionWhileUpdatingInsuranceWhenDataIsNotValid(InsuranceInvalidModelScenarioEnum scenario)
+        {
+            // Arrange            
+            var (invalidInsuranceModel, expectedException) = GetInvalidModelFromScenario(scenario);
+            var repository = Substitute.For<IInsuranceRepository>();
+            var service = new InsuranceService(repository);
+
+            // Act
+            var exception = Record.Exception(() => service.Update(invalidInsuranceModel));
+
+            // Assert
+            exception.Should().NotBeNull();
+            exception.Should().BeOfType(expectedException.GetType());
+        }
+
 
         private (InsuranceModel model, Exception expectedException) GetInvalidModelFromScenario(InsuranceInvalidModelScenarioEnum scenario)
         {

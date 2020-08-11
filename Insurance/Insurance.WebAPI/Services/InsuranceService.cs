@@ -39,13 +39,14 @@ namespace Insurance.WebAPI.Services
 
         public InsuranceModel Update(InsuranceModel insurance)
         {
+            ValidateInsuranceData(insurance);
+
             return _insuranceRepository.Update(insurance);
         }
 
         public void Delete(int insuranceId)
         {
             _insuranceRepository.Delete(insuranceId);
-
         }
 
         #endregion
