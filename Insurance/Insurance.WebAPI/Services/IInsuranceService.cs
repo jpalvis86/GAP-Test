@@ -6,6 +6,8 @@ namespace Insurance.WebAPI.Services
     public interface IInsuranceService
     {
         IEnumerable<InsuranceModel> GetAll();
-        InsuranceModel Add(InsuranceModel insurance);
+        InsuranceModel Add(InsuranceModel insurance); 
+        
+        void Delete(int insuranceId);
     }
 }

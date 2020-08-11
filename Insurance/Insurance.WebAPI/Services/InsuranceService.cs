@@ -12,6 +12,11 @@ namespace Insurance.WebAPI.Services
             return insurance;
         }
 
+        public void Delete(int insuranceId)
+        {
+            
+        }
+
         public IEnumerable<InsuranceModel> GetAll()
         {
             return new List<InsuranceModel>();

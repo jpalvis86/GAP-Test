@@ -21,7 +21,7 @@ namespace Insurance.UnitTests.Controllers
             var service = Substitute.For<IInsuranceService>();
             service.GetAll().Returns(insuranceList);
 
-            var controller = new InsuranceController(service);
+            var controller = new InsurancesController(service);
 
             // Act
             var response = controller.GetAllInsurances();
@@ -53,7 +53,7 @@ namespace Insurance.UnitTests.Controllers
             var service = Substitute.For<IInsuranceService>();
             service.Add(newInsurance).Returns(newInsurance);
 
-            var controller = new InsuranceController(service);
+            var controller = new InsurancesController(service);
 
             // Act
             var response = controller.Add(newInsurance);
@@ -65,6 +65,22 @@ namespace Insurance.UnitTests.Controllers
             var record = result.Value as InsuranceModel;
             record.Should().NotBeNull();
         }
+
+        [Fact]
+        public void ReturnNoContentWhenDeletingInsurance()
+        {
+            // Arrange
+            var service = Substitute.For<IInsuranceService>();
+            var controller = new InsurancesController(service);
+
+            // Act
+            var response = controller.Delete(insuranceId: 1);
+
+            // Assert
+            var result = response as NoContentResult;
+            result.Should().NotBeNull();
+        }
+
 
         private static IEnumerable<InsuranceModel> GetInsuranceList()
         {

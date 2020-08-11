@@ -6,11 +6,11 @@ namespace Insurance.WebAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class InsuranceController : ControllerBase
+    public class InsurancesController : ControllerBase
     {
         private readonly IInsuranceService _insuranceService;
 
-        public InsuranceController(IInsuranceService insuranceService)
+        public InsurancesController(IInsuranceService insuranceService)
         {
             _insuranceService = insuranceService;
         }
@@ -21,13 +21,19 @@ namespace Insurance.WebAPI.Controllers
             var insurances = _insuranceService.GetAll();
             return Ok(insurances);
         }
-        
+
         [HttpPost]
         public IActionResult Add(InsuranceModel insurance)
         {
             var newInsurance = _insuranceService.Add(insurance);
-
             return Created($"/insurances/{insurance.Id}", newInsurance);
+        }
+
+        [HttpDelete]
+        public IActionResult Delete(int insuranceId)
+        {
+            _insuranceService.Delete(insuranceId);
+            return NoContent();
         }
     }
 }
