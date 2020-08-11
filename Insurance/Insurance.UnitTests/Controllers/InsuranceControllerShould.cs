@@ -13,10 +13,30 @@ namespace Insurance.UnitTests.Controllers
     public class InsuranceControllerShould
     {
         [Fact]
-        public void ReturnCollectionOfInsurances()
+        public void ReturnOkWithCollectionOfInsurances()
         {
             // Arrange
-            var insuranceList = new List<InsuranceModel>
+            var insuranceList = GetInsuranceList();
+
+            var service = Substitute.For<IInsuranceService>();
+            service.GetAll().Returns(insuranceList);
+
+            var controller = new InsuranceController(service);
+
+            // Act
+            var response = controller.GetAllInsurances();
+
+            // Assert
+            var result = response as OkObjectResult;
+            result.Should().NotBeNull();
+
+            var records = result.Value as IEnumerable<InsuranceModel>;
+            records.Should().NotBeEmpty();
+        }
+
+        private static IEnumerable<InsuranceModel> GetInsuranceList()
+        {
+            return new List<InsuranceModel>
             {
                 new InsuranceModel
                 {
@@ -43,21 +63,6 @@ namespace Insurance.UnitTests.Controllers
                     Price = 14999.99M,
                 }
             };
-
-            var service = Substitute.For<IInsuranceService>();
-            service.GetAll().Returns(insuranceList);
-
-            var controller = new InsuranceController(service);
-
-            // Act
-            var response = controller.GetAllInsurances();
-
-            // Assert
-            var result = response as OkObjectResult;
-            result.Should().NotBeNull();
-
-            var records = result.Value as IEnumerable<InsuranceModel>;
-            records.Should().NotBeEmpty();
         }
     }
 }
