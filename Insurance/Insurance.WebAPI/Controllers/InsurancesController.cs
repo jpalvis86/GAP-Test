@@ -20,14 +20,18 @@ namespace Insurance.WebAPI.Controllers
         {
             var insurances = _insuranceService.GetAll();
             return Ok(insurances);
-        } 
-        
+        }
+
         [HttpGet]
         [Route(":id")]
         public IActionResult GetInsurance(int id)
         {
             var insurance = _insuranceService.GetById(id);
-            return Ok(insurance);
+
+            if (insurance != null)
+                return Ok(insurance);
+            else
+                return NoContent();
         }
 
         [HttpPost]
@@ -35,8 +39,8 @@ namespace Insurance.WebAPI.Controllers
         {
             var newInsurance = _insuranceService.Add(insurance);
             return Created($"/insurances/{insurance.Id}", newInsurance);
-        } 
-        
+        }
+
         [HttpPatch]
         public IActionResult UpdatePartial(InsuranceModel insurance)
         {

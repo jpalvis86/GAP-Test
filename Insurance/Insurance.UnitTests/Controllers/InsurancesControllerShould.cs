@@ -61,6 +61,24 @@ namespace Insurance.UnitTests.Controllers
             var records = result.Value as InsuranceModel;
             records.Should().NotBeNull();
         }
+        
+        [Fact]
+        public void ReturnNoContentWhenRetrievingSingleInsuranceThatDoesNotExist()
+        {
+            // Arrange
+            var service = Substitute.For<IInsuranceService>();
+            InsuranceModel nullInsurance = null;
+            service.GetById(Arg.Any<int>()).Returns(nullInsurance);
+
+            var controller = new InsurancesController(service);
+
+            // Act
+            var response = controller.GetInsurance(id: 999);
+
+            // Assert
+            var result = response as NoContentResult;
+            result.Should().NotBeNull();
+        }
 
         [Fact]
         public void ReturnCreatedWhenAddingNewInsurance()
