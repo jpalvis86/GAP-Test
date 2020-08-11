@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Insurance.Core.Models;
 using Insurance.Repository;
 using Insurance.UnitTests.Helpers;
 using Insurance.WebAPI.Services;
@@ -46,6 +47,25 @@ namespace Insurance.UnitTests.Services
 
             // Assert
             insurance.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void ReturnNullWhenInsuranceIdDoesNotExist()
+        {
+            // Arrange            
+            var insuranceId = 999;
+
+            var repository = Substitute.For<IInsuranceRepository>();
+            InsuranceModel nullInsurance = null;
+            repository.GetById(insuranceId).Returns(nullInsurance);
+
+            var service = new InsuranceService(repository);
+
+            // Act
+            var insurance = service.GetById(insuranceId);
+
+            // Assert
+            insurance.Should().BeNull();
         }
     }
 }
