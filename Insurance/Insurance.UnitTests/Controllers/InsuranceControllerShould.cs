@@ -13,7 +13,7 @@ namespace Insurance.UnitTests.Controllers
     public class InsuranceControllerShould
     {
         [Fact]
-        public void ReturnOkWithCollectionOfInsurances()
+        public void ReturnOkWhenRetrievingExistingInsurances()
         {
             // Arrange
             var insuranceList = GetInsuranceList();
@@ -32,6 +32,38 @@ namespace Insurance.UnitTests.Controllers
 
             var records = result.Value as IEnumerable<InsuranceModel>;
             records.Should().NotBeEmpty();
+        }
+
+        [Fact]
+        public void ReturnCreatedWhenAddingNewInsurance()
+        {
+            // Arrange
+            var newInsurance = new InsuranceModel
+            {
+                Name = "New Insurance",
+                Description = "New Insurance Description",
+                CoverageRate = 0.9,
+                CoverageTypes = new List<CoverageType> { CoverageType.Damage },
+                Risk = Risk.Low,
+                StartDate = DateTime.Today.AddDays(1),
+                MonthsOfCoverage = 36,
+                Price = 1199.99M
+            };
+
+            var service = Substitute.For<IInsuranceService>();
+            service.Add(newInsurance).Returns(newInsurance);
+
+            var controller = new InsuranceController(service);
+
+            // Act
+            var response = controller.Add(newInsurance);
+
+            // Assert
+            var result = response as CreatedResult;
+            result.Should().NotBeNull();
+
+            var record = result.Value as InsuranceModel;
+            record.Should().NotBeNull();
         }
 
         private static IEnumerable<InsuranceModel> GetInsuranceList()
