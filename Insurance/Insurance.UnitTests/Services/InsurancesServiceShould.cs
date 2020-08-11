@@ -4,6 +4,7 @@ using Insurance.Repository;
 using Insurance.UnitTests.Helpers;
 using Insurance.WebAPI.Services;
 using NSubstitute;
+using System;
 using System.Linq;
 using Xunit;
 
@@ -66,6 +67,23 @@ namespace Insurance.UnitTests.Services
 
             // Assert
             insurance.Should().BeNull();
+        }
+
+        [Fact]
+        public void ThrowAnExceptionWhenIdIsLowerThanOne()
+        {
+            // Arrange            
+            var insuranceId = -1;
+
+            var repository = Substitute.For<IInsuranceRepository>();
+            var service = new InsuranceService(repository);
+
+            // Act
+            var exception = Record.Exception(() => service.GetById(insuranceId));
+
+            // Assert
+            exception.Should().NotBeNull();
+            exception.Should().BeOfType<ArgumentOutOfRangeException>();
         }
     }
 }
