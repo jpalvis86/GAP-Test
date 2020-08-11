@@ -35,6 +35,8 @@ namespace Insurance.WebAPI.Services
             // TODO: Validate insurance data
 
             ValidateInsuranceStartDate(insurance.StartDate);
+            ValidateInsuranceCoverageRate(insurance.CoverageRate);
+
 
             return _insuranceRepository.Add(insurance);
         }
@@ -49,6 +51,7 @@ namespace Insurance.WebAPI.Services
             _insuranceRepository.Delete(insuranceId);
 
         }
+
         #endregion
 
         #region Private     
@@ -61,6 +64,16 @@ namespace Insurance.WebAPI.Services
         {
             if (insuranceStartDate < DateTime.Today)
                 throw new InsuranceStartDateIsNotValidException(insuranceStartDate);
+        }
+
+        /// <summary>
+        /// Throws an exception if the insurance coverage rate is below 1% or higher than 100%
+        /// </summary>
+        /// <param name="insuranceCoverageRate"></param>
+        private static void ValidateInsuranceCoverageRate(double insuranceCoverageRate)
+        {
+            if (insuranceCoverageRate < 0.01 || insuranceCoverageRate > 1)
+                throw new InsuranceCoverageRateIsNotValidException(insuranceCoverageRate);
         }
 
         #endregion

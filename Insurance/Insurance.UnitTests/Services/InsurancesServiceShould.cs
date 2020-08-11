@@ -149,6 +149,7 @@ namespace Insurance.UnitTests.Services
 
         [Theory]
         [InlineData(InsuranceInvalidModelScenarioEnum.StartDateIsNotValid)]
+        [InlineData(InsuranceInvalidModelScenarioEnum.CoverageRateIsNotValid)]
         public void ThrowAnExceptionWhileAddingInsuranceWhenDataIsNotValid(InsuranceInvalidModelScenarioEnum scenario)
         {
             // Arrange            
@@ -173,8 +174,21 @@ namespace Insurance.UnitTests.Services
             {
                 case InsuranceInvalidModelScenarioEnum.StartDateIsNotValid:
                     var invalidDate = DateTime.Now.AddDays(-1); // Yesterday
+
                     expectedException = new InsuranceStartDateIsNotValidException(invalidDate);
                     model = new InsuranceModel { StartDate = invalidDate };
+
+                    break;
+                case InsuranceInvalidModelScenarioEnum.CoverageRateIsNotValid:
+                    var invalidCoverageRate = 1.1; // Greater than 100%
+
+                    expectedException = new InsuranceCoverageRateIsNotValidException(invalidCoverageRate);
+                    model = new InsuranceModel
+                    {
+                        StartDate = DateTime.Today,
+                        CoverageRate = invalidCoverageRate
+                    };
+
                     break;
 
                 default:
@@ -186,7 +200,8 @@ namespace Insurance.UnitTests.Services
 
         public enum InsuranceInvalidModelScenarioEnum
         {
-            StartDateIsNotValid
+            StartDateIsNotValid,
+            CoverageRateIsNotValid
         }
     }
 
