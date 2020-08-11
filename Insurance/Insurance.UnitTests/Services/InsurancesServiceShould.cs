@@ -119,7 +119,7 @@ namespace Insurance.UnitTests.Services
                 CoverageTypes = new List<CoverageType> { CoverageType.Damage },
                 StartDate = DateTime.Today,
                 MonthsOfCoverage = 12,
-                Price = 99.99M
+                Price = 101.99M
             };
 
             var addedInsurance = new InsuranceModel
@@ -151,6 +151,7 @@ namespace Insurance.UnitTests.Services
         [InlineData(InsuranceInvalidModelScenarioEnum.StartDateIsNotValid)]
         [InlineData(InsuranceInvalidModelScenarioEnum.CoverageRateIsNotValid)]
         [InlineData(InsuranceInvalidModelScenarioEnum.MonthsPeriodIsNotValid)]
+        [InlineData(InsuranceInvalidModelScenarioEnum.PriceIsNotValid)]
         public void ThrowAnExceptionWhileAddingInsuranceWhenDataIsNotValid(InsuranceInvalidModelScenarioEnum scenario)
         {
             // Arrange            
@@ -203,6 +204,19 @@ namespace Insurance.UnitTests.Services
                     };
 
                     break;
+                case InsuranceInvalidModelScenarioEnum.PriceIsNotValid:
+                    var invalidPrice = 99M; // Lower than 100
+
+                    expectedException = new InsurancePriceIsNotValidException(invalidPrice);
+                    model = new InsuranceModel
+                    {
+                        StartDate = DateTime.Today,
+                        CoverageRate = 0.5,
+                        MonthsOfCoverage = 12,
+                        Price = invalidPrice
+                    };
+
+                    break;
 
                 default:
                     throw new ArgumentOutOfRangeException("Scenario is not valid");
@@ -215,7 +229,8 @@ namespace Insurance.UnitTests.Services
         {
             StartDateIsNotValid,
             CoverageRateIsNotValid,
-            MonthsPeriodIsNotValid
+            MonthsPeriodIsNotValid,
+            PriceIsNotValid
         }
     }
 
