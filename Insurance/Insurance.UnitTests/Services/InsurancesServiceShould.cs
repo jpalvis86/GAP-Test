@@ -69,12 +69,13 @@ namespace Insurance.UnitTests.Services
             insurance.Should().BeNull();
         }
 
-        [Fact]
-        public void ThrowAnExceptionWhenIdIsLowerThanOne()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        [InlineData(-999)]
+        public void ThrowAnExceptionWhenIdIsLowerThanOne(int insuranceId)
         {
             // Arrange            
-            var insuranceId = -1;
-
             var repository = Substitute.For<IInsuranceRepository>();
             var service = new InsuranceService(repository);
 
