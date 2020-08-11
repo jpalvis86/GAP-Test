@@ -1,10 +1,10 @@
 ﻿using FluentAssertions;
+using Insurance.Core.Exceptions;
 using Insurance.Core.Models;
 using Insurance.Repository;
 using Insurance.UnitTests.Helpers;
 using Insurance.WebAPI.Services;
 using NSubstitute;
-using System;
 using System.Linq;
 using Xunit;
 
@@ -83,7 +83,7 @@ namespace Insurance.UnitTests.Services
 
             // Assert
             exception.Should().NotBeNull();
-            exception.Should().BeOfType<ArgumentOutOfRangeException>();
+            exception.Should().BeOfType<InsuranceIdIsNotValidException>();
         }
     }
 }

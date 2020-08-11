@@ -1,6 +1,8 @@
-﻿using Insurance.Core.Models;
+﻿using Insurance.Core.Exceptions;
+using Insurance.Core.Models;
 using Insurance.WebAPI.Services;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace Insurance.WebAPI.Controllers
 {
@@ -26,12 +28,19 @@ namespace Insurance.WebAPI.Controllers
         [Route(":id")]
         public IActionResult GetInsurance(int id)
         {
-            var insurance = _insuranceService.GetById(id);
+            try
+            {
+                var insurance = _insuranceService.GetById(id);
 
-            if (insurance != null)
-                return Ok(insurance);
-            else
-                return NoContent();
+                if (insurance != null)
+                    return Ok(insurance);
+                else
+                    return NoContent();
+            }
+            catch (Exception ex) when (ex is InsuranceIdIsNotValidException)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost]

@@ -1,10 +1,12 @@
 using FluentAssertions;
+using Insurance.Core.Exceptions;
 using Insurance.Core.Models;
 using Insurance.UnitTests.Helpers;
 using Insurance.WebAPI.Controllers;
 using Insurance.WebAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,7 +63,25 @@ namespace Insurance.UnitTests.Controllers
             var records = result.Value as InsuranceModel;
             records.Should().NotBeNull();
         }
-        
+
+        [Fact]
+        public void ReturnBadRequestWhenRetrievingSingleInsuranceWithNegativeId()
+        {
+            // Arrange
+            var insuranceId = -1;
+            var service = Substitute.For<IInsuranceService>();
+            service.GetById(Arg.Any<int>()).Throws(new InsuranceIdIsNotValidException(insuranceId));
+
+            var controller = new InsurancesController(service);
+
+            // Act
+            var response = controller.GetInsurance(insuranceId);
+
+            // Assert
+            var result = response as BadRequestObjectResult;
+            result.Should().NotBeNull();
+        }
+
         [Fact]
         public void ReturnNoContentWhenRetrievingSingleInsuranceThatDoesNotExist()
         {

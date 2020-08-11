@@ -1,4 +1,5 @@
-﻿using Insurance.Core.Models;
+﻿using Insurance.Core.Exceptions;
+using Insurance.Core.Models;
 using Insurance.Repository;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace Insurance.WebAPI.Services
         public InsuranceModel GetById(int id)
         {
             if (id <= 0)
-                throw new ArgumentOutOfRangeException("Insurance Id should be greater than 0");
+                throw new InsuranceIdIsNotValidException(id);
 
             return _insuranceRepository.GetById(id);
         }
