@@ -32,17 +32,11 @@ namespace Insurance.WebAPI.Services
 
         public InsuranceModel Add(InsuranceModel insurance)
         {
-            // TODO: Validate insurance data
-
-            ValidateInsuranceStartDate(insurance.StartDate);
-            ValidateInsuranceCoverageRate(insurance.CoverageRate);
-            ValidateInsuranceCoverageRateForHighRisk(insurance.CoverageRate, insurance.Risk);
-            ValidateInsuranceMonthsPeriod(insurance.MonthsOfCoverage);
-            ValidateInsurancePrice(insurance.Price);
-
+            ValidateInsuranceData(insurance);
 
             return _insuranceRepository.Add(insurance);
         }
+
 
         public InsuranceModel Update(InsuranceModel insurance)
         {
@@ -58,6 +52,15 @@ namespace Insurance.WebAPI.Services
         #endregion
 
         #region Private     
+
+        private static void ValidateInsuranceData(InsuranceModel insurance)
+        {
+            ValidateInsuranceStartDate(insurance.StartDate);
+            ValidateInsuranceCoverageRate(insurance.CoverageRate);
+            ValidateInsuranceCoverageRateForHighRisk(insurance.CoverageRate, insurance.Risk);
+            ValidateInsuranceMonthsPeriod(insurance.MonthsOfCoverage);
+            ValidateInsurancePrice(insurance.Price);
+        }
 
         /// <summary>
         /// Throws an exception if the insurance start date is before today
