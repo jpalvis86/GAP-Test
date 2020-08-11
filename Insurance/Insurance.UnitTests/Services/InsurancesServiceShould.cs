@@ -86,5 +86,23 @@ namespace Insurance.UnitTests.Services
             exception.Should().NotBeNull();
             exception.Should().BeOfType<InsuranceIdIsNotValidException>();
         }
+
+        [Fact]
+        public void DeleteInsurance()
+        {
+            // Arrange            
+            var insuranceId = 1;
+
+            var repository = Substitute.For<IInsuranceRepository>();
+            repository.Delete(insuranceId);
+
+            var service = new InsuranceService(repository);
+
+            // Act
+            var exception = Record.Exception(() => service.Delete(insuranceId));
+
+            // Assert
+            exception.Should().BeNull();
+        }
     }
 }

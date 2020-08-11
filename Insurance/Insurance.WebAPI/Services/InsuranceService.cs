@@ -1,7 +1,6 @@
 ﻿using Insurance.Core.Exceptions;
 using Insurance.Core.Models;
 using Insurance.Repository;
-using System;
 using System.Collections.Generic;
 
 namespace Insurance.WebAPI.Services
@@ -39,12 +38,11 @@ namespace Insurance.WebAPI.Services
         }
 
 
-
         public void Delete(int insuranceId)
         {
+            _insuranceRepository.Delete(insuranceId);
 
         }
-
 
     }
 }
