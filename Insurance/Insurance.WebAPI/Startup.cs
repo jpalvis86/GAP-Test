@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Insurance.WebAPI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,6 +27,13 @@ namespace Insurance.WebAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            InjectServiceDependencies(services);
+        }
+
+        private static void InjectServiceDependencies(IServiceCollection services)
+        {
+            services.AddScoped<IInsuranceService, InsuranceService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

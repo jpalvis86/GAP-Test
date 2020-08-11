@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Insurance.WebAPI.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Insurance.WebAPI.Controllers
 {
@@ -6,10 +7,18 @@ namespace Insurance.WebAPI.Controllers
     [Route("[controller]")]
     public class InsuranceController : ControllerBase
     {
-        [HttpGet]
-        public IActionResult Get()
+        private readonly IInsuranceService _insuranceService;
+
+        public InsuranceController(IInsuranceService insuranceService)
         {
-            return Ok("Works");
+            _insuranceService = insuranceService;
+        }
+
+        [HttpGet]
+        public IActionResult GetAllInsurances()
+        {
+            var insurances = _insuranceService.GetAll();
+            return Ok(insurances);
         }
     }
 }
