@@ -8,5 +8,6 @@ namespace Insurance.Repository
         IEnumerable<InsuranceModel> Get();
         InsuranceModel GetById(int id);
         void Delete(int id);
+        InsuranceModel Add(InsuranceModel insurance);
     }
 }

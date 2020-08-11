@@ -29,14 +29,15 @@ namespace Insurance.WebAPI.Services
 
         public InsuranceModel Add(InsuranceModel insurance)
         {
-            return insurance;
+            // TODO: Validate insurance data
+
+            return _insuranceRepository.Add(insurance);
         }
 
         public InsuranceModel Update(InsuranceModel insurance)
         {
             return insurance;
         }
-
 
         public void Delete(int insuranceId)
         {

@@ -5,6 +5,8 @@ using Insurance.Repository;
 using Insurance.UnitTests.Helpers;
 using Insurance.WebAPI.Services;
 using NSubstitute;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 
@@ -103,6 +105,46 @@ namespace Insurance.UnitTests.Services
 
             // Assert
             exception.Should().BeNull();
+        }
+
+        [Fact]
+        public void AddInsuranceSuccessfullyWhenDataIsValid()
+        {
+            // Arrange            
+            var insurance = new InsuranceModel
+            {
+                Name = "Test Insurance",
+                Description = "Test Insurance Description",
+                CoverageRate = 0.4,
+                CoverageTypes = new List<CoverageType> { CoverageType.Damage },
+                StartDate = DateTime.Today,
+                MonthsOfCoverage = 12,
+                Price = 99.99M
+            };
+
+            var addedInsurance = new InsuranceModel
+            {
+                Id = 1,
+                Name = "Test Insurance",
+                Description = "Test Insurance Description",
+                CoverageRate = 0.4,
+                CoverageTypes = new List<CoverageType> { CoverageType.Damage },
+                StartDate = DateTime.Today,
+                MonthsOfCoverage = 12,
+                Price = 99.99M
+            };
+
+            var repository = Substitute.For<IInsuranceRepository>();
+            repository.Add(insurance).Returns(addedInsurance);
+
+            var service = new InsuranceService(repository);
+
+            // Act
+            var newInsurance = service.Add(insurance);
+
+            // Assert
+            newInsurance.Should().NotBeNull();
+            newInsurance.Id.Should().Be(addedInsurance.Id);
         }
     }
 }
