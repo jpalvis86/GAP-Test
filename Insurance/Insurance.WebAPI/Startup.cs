@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Insurance.Repository;
 using Insurance.WebAPI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -29,7 +31,16 @@ namespace Insurance.WebAPI
             services.AddControllers();
 
             InjectServiceDependencies(services);
-            
+            InjectRepositories(services);
+
+            services.AddDbContext<InsuranceDbContext>(
+                options => options.UseInMemoryDatabase(databaseName: "InMemoryInsuranceDb")
+            );
+        }
+
+        private static void InjectRepositories(IServiceCollection services)
+        {
+            services.AddScoped<IInsuranceRepository, InsuranceRepository>();
         }
 
         private static void InjectServiceDependencies(IServiceCollection services)
