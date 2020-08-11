@@ -232,7 +232,15 @@ namespace Insurance.UnitTests.Services
             exception.Should().BeOfType(expectedException.GetType());
         }
 
-
+        /// <summary>
+        /// Returns tuple of an instance of InsuranceModel and an instance of an Exception
+        /// based on the scenario required for testing.
+        /// 
+        /// This is helpful to arrange the conditions for testing based on the specific scenario
+        /// we want to validate.
+        /// </summary>
+        /// <param name="scenario"></param>
+        /// <returns></returns>
         private (InsuranceModel model, Exception expectedException) GetInvalidModelFromScenario(InsuranceInvalidModelScenarioEnum scenario)
         {
             InsuranceModel model;
@@ -247,6 +255,7 @@ namespace Insurance.UnitTests.Services
                     model = new InsuranceModel { StartDate = invalidDate };
 
                     break;
+
                 case InsuranceInvalidModelScenarioEnum.CoverageRateIsNotValid:
                     var invalidCoverageRate = 1.1; // Greater than 100%
 
@@ -258,6 +267,7 @@ namespace Insurance.UnitTests.Services
                     };
 
                     break;
+
                 case InsuranceInvalidModelScenarioEnum.MonthsPeriodIsNotValid:
                     var invalidMonthsPeriod = 0; // Lower than 1
 
@@ -270,6 +280,7 @@ namespace Insurance.UnitTests.Services
                     };
 
                     break;
+
                 case InsuranceInvalidModelScenarioEnum.PriceIsNotValid:
                     var invalidPrice = 99M; // Lower than 100
 
