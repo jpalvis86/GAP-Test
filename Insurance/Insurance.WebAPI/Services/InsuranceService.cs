@@ -36,6 +36,7 @@ namespace Insurance.WebAPI.Services
 
             ValidateInsuranceStartDate(insurance.StartDate);
             ValidateInsuranceCoverageRate(insurance.CoverageRate);
+            ValidateInsuranceMonthsPeriod(insurance.MonthsOfCoverage);
 
 
             return _insuranceRepository.Add(insurance);
@@ -74,6 +75,16 @@ namespace Insurance.WebAPI.Services
         {
             if (insuranceCoverageRate < 0.01 || insuranceCoverageRate > 1)
                 throw new InsuranceCoverageRateIsNotValidException(insuranceCoverageRate);
+        }
+
+        /// <summary>
+        /// Throws an exception if the insurance months period rate is below 1
+        /// </summary>
+        /// <param name="insuranceMonthsPeriod"></param>
+        private static void ValidateInsuranceMonthsPeriod(double insuranceMonthsPeriod)
+        {
+            if (insuranceMonthsPeriod < 1)
+                throw new InsuranceMonthsPeriodIsNotValidException(insuranceMonthsPeriod);
         }
 
         #endregion
