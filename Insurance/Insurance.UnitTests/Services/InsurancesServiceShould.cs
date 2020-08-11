@@ -146,5 +146,49 @@ namespace Insurance.UnitTests.Services
             newInsurance.Should().NotBeNull();
             newInsurance.Id.Should().Be(addedInsurance.Id);
         }
+
+        [Theory]
+        [InlineData(InsuranceInvalidModelScenarioEnum.StartDateIsNotValid)]
+        public void ThrowAnExceptionWhileAddingInsuranceWhenDataIsNotValid(InsuranceInvalidModelScenarioEnum scenario)
+        {
+            // Arrange            
+            var (invalidInsuranceModel, expectedException) = GetInvalidModelFromScenario(scenario);
+            var repository = Substitute.For<IInsuranceRepository>();
+            var service = new InsuranceService(repository);
+
+            // Act
+            var exception = Record.Exception(() => service.Add(invalidInsuranceModel));
+
+            // Assert
+            exception.Should().NotBeNull();
+            exception.Should().BeOfType(expectedException.GetType());
+        }
+
+        private (InsuranceModel model, Exception expectedException) GetInvalidModelFromScenario(InsuranceInvalidModelScenarioEnum scenario)
+        {
+            InsuranceModel model;
+            Exception expectedException;
+
+            switch (scenario)
+            {
+                case InsuranceInvalidModelScenarioEnum.StartDateIsNotValid:
+                    var invalidDate = DateTime.Now.AddDays(-1); // Yesterday
+                    expectedException = new InsuranceStartDateIsNotValidException(invalidDate);
+                    model = new InsuranceModel { StartDate = invalidDate };
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException("Scenario is not valid");
+            }
+
+            return (model, expectedException);
+        }
+
+        public enum InsuranceInvalidModelScenarioEnum
+        {
+            StartDateIsNotValid
+        }
     }
+
+
 }

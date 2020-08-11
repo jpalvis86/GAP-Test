@@ -1,6 +1,7 @@
 ﻿using Insurance.Core.Exceptions;
 using Insurance.Core.Models;
 using Insurance.Repository;
+using System;
 using System.Collections.Generic;
 
 namespace Insurance.WebAPI.Services
@@ -13,6 +14,8 @@ namespace Insurance.WebAPI.Services
         {
             _insuranceRepository = insuranceRepository;
         }
+
+        #region Public
 
         public IEnumerable<InsuranceModel> GetAll()
         {
@@ -31,6 +34,8 @@ namespace Insurance.WebAPI.Services
         {
             // TODO: Validate insurance data
 
+            ValidateInsuranceStartDate(insurance.StartDate);
+
             return _insuranceRepository.Add(insurance);
         }
 
@@ -44,6 +49,21 @@ namespace Insurance.WebAPI.Services
             _insuranceRepository.Delete(insuranceId);
 
         }
+        #endregion
+
+        #region Private     
+
+        /// <summary>
+        /// Throws an exception if the insurance start date is before today
+        /// </summary>
+        /// <param name="insuranceStartDate"></param>
+        private static void ValidateInsuranceStartDate(DateTime insuranceStartDate)
+        {
+            if (insuranceStartDate < DateTime.Today)
+                throw new InsuranceStartDateIsNotValidException(insuranceStartDate);
+        }
+
+        #endregion
 
     }
 }
