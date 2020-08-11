@@ -13,6 +13,16 @@ namespace Insurance.WebAPI.Services
             _insuranceRepository = insuranceRepository;
         }
 
+        public IEnumerable<InsuranceModel> GetAll()
+        {
+            return _insuranceRepository.Get();
+        }
+
+        public InsuranceModel GetById(int id)
+        {
+            return _insuranceRepository.GetById(id);
+        }
+
         public InsuranceModel Add(InsuranceModel insurance)
         {
             return insurance;
@@ -23,15 +33,13 @@ namespace Insurance.WebAPI.Services
             return insurance;
         }
 
-        public IEnumerable<InsuranceModel> GetAll()
-        {
-            return _insuranceRepository.Get();
-        }
+
 
         public void Delete(int insuranceId)
         {
 
         }
+
 
     }
 }

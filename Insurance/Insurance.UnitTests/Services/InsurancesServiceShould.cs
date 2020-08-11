@@ -27,5 +27,25 @@ namespace Insurance.UnitTests.Services
             // Assert
             insurances.Should().HaveCount(insuranceList.Count());
         }
+
+        [Fact]
+        public void ReturnSingleInsuranceIfExists()
+        {
+            // Arrange            
+            var insuranceList = InsuranceRecordsHelper.GetInsurances();
+            var insuranceId = 1;
+
+            var repository = Substitute.For<IInsuranceRepository>();
+            var insuranceFromList = insuranceList.Single(i => i.Id == insuranceId);
+            repository.GetById(insuranceId).Returns(insuranceFromList);
+
+            var service = new InsuranceService(repository);
+
+            // Act
+            var insurance = service.GetById(insuranceId);
+
+            // Assert
+            insurance.Should().NotBeNull();
+        }
     }
 }
