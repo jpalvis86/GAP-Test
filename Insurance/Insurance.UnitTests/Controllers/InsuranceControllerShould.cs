@@ -81,6 +81,33 @@ namespace Insurance.UnitTests.Controllers
             result.Should().NotBeNull();
         }
 
+        [Fact]
+        public void ReturnOkWhenUpdatingAnExistingInsurance()
+        {
+            // Arrange
+            var updatedInsurance = new InsuranceModel
+            {
+                Name = "Updated Insurance",
+                Description = "Updated Insurance Description",
+                Price = 99.99M
+            };
+
+            var service = Substitute.For<IInsuranceService>();
+            service.Update(updatedInsurance).Returns(updatedInsurance);
+
+            var controller = new InsurancesController(service);
+
+            // Act
+            var response = controller.UpdatePartial(updatedInsurance);
+
+            // Assert
+            var result = response as OkObjectResult;
+            result.Should().NotBeNull();
+
+            var record = result.Value as InsuranceModel;
+            record.Should().NotBeNull();
+        }
+
 
         private static IEnumerable<InsuranceModel> GetInsuranceList()
         {

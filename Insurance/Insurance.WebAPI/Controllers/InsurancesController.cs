@@ -27,6 +27,13 @@ namespace Insurance.WebAPI.Controllers
         {
             var newInsurance = _insuranceService.Add(insurance);
             return Created($"/insurances/{insurance.Id}", newInsurance);
+        } 
+        
+        [HttpPatch]
+        public IActionResult UpdatePartial(InsuranceModel insurance)
+        {
+            var updatedInsurance = _insuranceService.Update(insurance);
+            return Ok(updatedInsurance);
         }
 
         [HttpDelete]
