@@ -37,10 +37,9 @@ namespace Insurance.WebAPI.Services
             return _insuranceRepository.Add(insurance);
         }
 
-
         public InsuranceModel Update(InsuranceModel insurance)
         {
-            return insurance;
+            return _insuranceRepository.Update(insurance);
         }
 
         public void Delete(int insuranceId)

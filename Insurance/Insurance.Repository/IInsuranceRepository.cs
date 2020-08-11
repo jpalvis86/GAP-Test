@@ -9,5 +9,6 @@ namespace Insurance.Repository
         InsuranceModel GetById(int id);
         void Delete(int id);
         InsuranceModel Add(InsuranceModel insurance);
+        InsuranceModel Update(InsuranceModel insurance);
     }
 }

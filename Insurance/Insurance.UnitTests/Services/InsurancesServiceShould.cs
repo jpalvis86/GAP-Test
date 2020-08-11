@@ -168,6 +168,50 @@ namespace Insurance.UnitTests.Services
             exception.Should().BeOfType(expectedException.GetType());
         }
 
+        [Fact]
+        public void UpdateInsuranceSuccessfullyWhenDataIsValid()
+        {
+            // Arrange            
+            var insurance = new InsuranceModel
+            {
+                Id = 1,
+                Name = "Test Insurance",
+                Description = "Test Insurance Description",
+                CoverageRate = 0.4,
+                CoverageTypes = new List<CoverageType> { CoverageType.Damage },
+                StartDate = DateTime.Today,
+                MonthsOfCoverage = 12,
+                Price = 101.99M
+            };
+
+            var updatedInsurance = new InsuranceModel
+            {
+                Id = 1,
+                Name = "Updated Test Insurance",
+                Description = "Updated Test Insurance Description",
+                CoverageRate = 0.3,
+                CoverageTypes = new List<CoverageType> { CoverageType.Damage, CoverageType.Earthquake },
+                StartDate = DateTime.Today.AddMonths(1),
+                MonthsOfCoverage = 24,
+                Price = 299.99M
+            };
+
+            var repository = Substitute.For<IInsuranceRepository>();
+            repository.Update(insurance).Returns(updatedInsurance);
+
+            var service = new InsuranceService(repository);
+
+            // Act
+            var returnedInsurance = service.Update(insurance);
+
+            // Assert
+            returnedInsurance.Should().NotBeNull();
+            returnedInsurance.Name.Should().Be(updatedInsurance.Name);
+            returnedInsurance.Description.Should().Be(updatedInsurance.Description);
+            returnedInsurance.Price.Should().Be(updatedInsurance.Price);
+        }
+
+
         private (InsuranceModel model, Exception expectedException) GetInvalidModelFromScenario(InsuranceInvalidModelScenarioEnum scenario)
         {
             InsuranceModel model;
