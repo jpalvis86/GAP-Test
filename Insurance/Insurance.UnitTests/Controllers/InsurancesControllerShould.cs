@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 namespace Insurance.UnitTests.Controllers
@@ -37,6 +38,28 @@ namespace Insurance.UnitTests.Controllers
 
             var records = result.Value as IEnumerable<InsuranceModel>;
             records.Should().NotBeEmpty();
+        }
+
+        [Fact]
+        public void ReturnOkWhenRetrievingSingleInsurance()
+        {
+            // Arrange
+            var insuranceList = InsuranceRecordsHelper.GetInsurances();
+
+            var service = Substitute.For<IInsuranceService>();
+            service.GetById(Arg.Any<int>()).Returns(insuranceList.First());
+
+            var controller = new InsurancesController(service);
+
+            // Act
+            var response = controller.GetInsurance(id: 1);
+
+            // Assert
+            var result = response as OkObjectResult;
+            result.Should().NotBeNull();
+
+            var records = result.Value as InsuranceModel;
+            records.Should().NotBeNull();
         }
 
         [Fact]

@@ -20,6 +20,14 @@ namespace Insurance.WebAPI.Controllers
         {
             var insurances = _insuranceService.GetAll();
             return Ok(insurances);
+        } 
+        
+        [HttpGet]
+        [Route(":id")]
+        public IActionResult GetInsurance(int id)
+        {
+            var insurance = _insuranceService.GetById(id);
+            return Ok(insurance);
         }
 
         [HttpPost]
