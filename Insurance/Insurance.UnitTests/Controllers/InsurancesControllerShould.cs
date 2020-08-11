@@ -10,7 +10,11 @@ using Xunit;
 
 namespace Insurance.UnitTests.Controllers
 {
-    public class InsuranceControllerShould
+    /// <summary>
+    /// Unit tests for the Insurances Controller.
+    /// Here we validate the return codes more than the actual data
+    /// </summary>
+    public class InsurancesControllerShould
     {
         [Fact]
         public void ReturnOkWhenRetrievingExistingInsurances()
