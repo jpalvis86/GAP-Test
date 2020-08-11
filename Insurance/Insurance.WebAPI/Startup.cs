@@ -30,12 +30,16 @@ namespace Insurance.WebAPI
         {
             services.AddControllers();
 
-            InjectServiceDependencies(services);
-            InjectRepositories(services);
-
+            /*
+             * For a Production deployment, 
+             * we would use another DB like SQL Server.
+             */
             services.AddDbContext<InsuranceDbContext>(
                 options => options.UseInMemoryDatabase(databaseName: "InMemoryInsuranceDb")
             );
+
+            InjectServiceDependencies(services);
+            InjectRepositories(services);
         }
 
         private static void InjectRepositories(IServiceCollection services)

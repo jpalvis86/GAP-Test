@@ -34,8 +34,26 @@ namespace Insurance.Repository
 
         public IEnumerable<InsuranceModel> Get()
         {
-            // TODO: Retrieve records
-            return new List<InsuranceModel>();
+            IEnumerable<InsuranceModel> records = new List<InsuranceModel>();
+
+            if (_context.Insurances.Any())
+            {
+                records = _context.Insurances.Select(i => new InsuranceModel
+                {
+                    Id = i.Id,
+                    Name = i.Name,
+                    Description = i.Description,
+                    CoverageRate = i.CoverageRate,
+                    StartDate = i.StartDate,
+                    MonthsOfCoverage = i.MonthsOfCoverage,
+                    Price = i.Price,
+                    Risk = (Risk)i.RiskId,
+                    CoverageTypes = i.InsurancesCoverages.Where(ic => ic.InsuranceId == i.Id)
+                                                        .Select(ic => (CoverageType)ic.CoverageTypeId)
+                });
+            }
+
+            return records;
         }
 
         public InsuranceModel GetById(int id)

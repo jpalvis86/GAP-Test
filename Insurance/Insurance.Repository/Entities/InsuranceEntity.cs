@@ -13,8 +13,6 @@ namespace Insurance.Repository.Entities
         [Required]
         public string Description { get; set; }
         [Required]
-        public IEnumerable<int> CoverageTypeIds { get; set; }
-        [Required]
         public double CoverageRate { get; set; }
         [Required]
         public DateTime StartDate { get; set; }
@@ -24,5 +22,8 @@ namespace Insurance.Repository.Entities
         public decimal Price { get; set; }
         [Required]
         public int RiskId { get; set; }
+
+
+        public IEnumerable<InsuranceCoverageBridgeEntity> InsurancesCoverages { get; set; }
     }
 }
