@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 
 namespace Insurance.WebAPI
 {
@@ -40,16 +41,22 @@ namespace Insurance.WebAPI
 
             InjectServiceDependencies(services);
             InjectRepositories(services);
-        }
 
-        private static void InjectRepositories(IServiceCollection services)
-        {
-            services.AddScoped<IInsuranceRepository, InsuranceRepository>();
-        }
-
-        private static void InjectServiceDependencies(IServiceCollection services)
-        {
-            services.AddScoped<IInsuranceService, InsuranceService>();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Insurance API",
+                    Version = "v1",
+                    Description = "Insurance API for GAP Technical Test",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Juan Pablo Alvis",
+                        Email = "jpan_2009@hotmail.com",
+                        Url = new Uri("https://www.linkedin.com/in/jpalvis86"),
+                    },
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,7 +64,7 @@ namespace Insurance.WebAPI
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                app.UseDeveloperExceptionPage();                         
             }
 
             app.UseHttpsRedirection();
@@ -70,6 +77,25 @@ namespace Insurance.WebAPI
             {
                 endpoints.MapControllers();
             });
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Insurance API");
+                c.RoutePrefix = string.Empty;
+            });
+        }
+
+
+
+        private static void InjectRepositories(IServiceCollection services)
+        {
+            services.AddScoped<IInsuranceRepository, InsuranceRepository>();
+        }
+
+        private static void InjectServiceDependencies(IServiceCollection services)
+        {
+            services.AddScoped<IInsuranceService, InsuranceService>();
         }
     }
 }

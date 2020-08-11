@@ -7,7 +7,7 @@ using System;
 namespace Insurance.WebAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class InsurancesController : ControllerBase
     {
         private readonly IInsuranceService _insuranceService;
