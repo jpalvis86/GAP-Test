@@ -36,6 +36,7 @@ namespace Insurance.WebAPI.Services
 
             ValidateInsuranceStartDate(insurance.StartDate);
             ValidateInsuranceCoverageRate(insurance.CoverageRate);
+            ValidateInsuranceCoverageRateForHighRisk(insurance.CoverageRate, insurance.Risk);
             ValidateInsuranceMonthsPeriod(insurance.MonthsOfCoverage);
             ValidateInsurancePrice(insurance.Price);
 
@@ -79,6 +80,17 @@ namespace Insurance.WebAPI.Services
         }
 
         /// <summary>
+        /// Throws an exception if the insurance coverage rate is higher than 50% for a High Risk profile
+        /// </summary>
+        /// <param name="insuranceCoverageRate"></param>
+        /// <param name="riskProfile"></param>
+        private static void ValidateInsuranceCoverageRateForHighRisk(double insuranceCoverageRate, Risk riskProfile)
+        {
+            if (riskProfile == Risk.High && insuranceCoverageRate > 0.5)
+                throw new InsuranceCoverageRateForHighRiskProfileIsNotValidException(insuranceCoverageRate);
+        }
+
+        /// <summary>
         /// Throws an exception if the insurance months period rate is below 1
         /// </summary>
         /// <param name="insuranceMonthsPeriod"></param>
@@ -86,8 +98,8 @@ namespace Insurance.WebAPI.Services
         {
             if (insuranceMonthsPeriod < 1)
                 throw new InsuranceMonthsPeriodIsNotValidException(insuranceMonthsPeriod);
-        } 
-        
+        }
+
         /// <summary>
         /// Throws an exception if the insurance price is below 100
         /// </summary>

@@ -150,6 +150,7 @@ namespace Insurance.UnitTests.Services
         [Theory]
         [InlineData(InsuranceInvalidModelScenarioEnum.StartDateIsNotValid)]
         [InlineData(InsuranceInvalidModelScenarioEnum.CoverageRateIsNotValid)]
+        [InlineData(InsuranceInvalidModelScenarioEnum.CoverageRateNotValidForTheRiskProfile)]
         [InlineData(InsuranceInvalidModelScenarioEnum.MonthsPeriodIsNotValid)]
         [InlineData(InsuranceInvalidModelScenarioEnum.PriceIsNotValid)]
         public void ThrowAnExceptionWhileAddingInsuranceWhenDataIsNotValid(InsuranceInvalidModelScenarioEnum scenario)
@@ -218,6 +219,22 @@ namespace Insurance.UnitTests.Services
 
                     break;
 
+                case InsuranceInvalidModelScenarioEnum.CoverageRateNotValidForTheRiskProfile:
+                    var riskProfile = Risk.High;
+                    var coverageRate = 0.51; // 51% -> Should fail according to business rule
+
+                    expectedException = new InsuranceCoverageRateForHighRiskProfileIsNotValidException(coverageRate);
+                    model = new InsuranceModel
+                    {
+                        Risk = riskProfile,
+                        StartDate = DateTime.Today,
+                        CoverageRate = coverageRate,
+                        MonthsOfCoverage = 12,
+                        Price = 100M
+                    };
+
+                    break;
+
                 default:
                     throw new ArgumentOutOfRangeException("Scenario is not valid");
             }
@@ -230,7 +247,8 @@ namespace Insurance.UnitTests.Services
             StartDateIsNotValid,
             CoverageRateIsNotValid,
             MonthsPeriodIsNotValid,
-            PriceIsNotValid
+            PriceIsNotValid,
+            CoverageRateNotValidForTheRiskProfile
         }
     }
 
