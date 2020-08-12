@@ -1,5 +1,6 @@
 ﻿using Insurance.Core.Models;
 using Insurance.Repository.Entities;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -36,30 +37,26 @@ namespace Insurance.Repository
             return insurance;
         }
 
-        public void Delete(int id)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public IEnumerable<InsuranceModel> Get()
         {
             IEnumerable<InsuranceModel> records = new List<InsuranceModel>();
 
             if (_context.Insurances.Any())
             {
-                records = _context.Insurances.Select(i => new InsuranceModel
-                {
-                    Id = i.Id,
-                    Name = i.Name,
-                    Description = i.Description,
-                    CoverageRate = i.CoverageRate,
-                    StartDate = i.StartDate,
-                    MonthsOfCoverage = i.MonthsOfCoverage,
-                    Price = i.Price,
-                    Risk = (Risk)i.RiskId,
-                    CoverageTypes = i.InsurancesCoverages.Where(ic => ic.InsuranceId == i.Id)
+                records = _context.Insurances.Include(i => i.InsurancesCoverages)
+                        .Select(i => new InsuranceModel
+                        {
+                            Id = i.Id,
+                            Name = i.Name,
+                            Description = i.Description,
+                            CoverageRate = i.CoverageRate,
+                            StartDate = i.StartDate,
+                            MonthsOfCoverage = i.MonthsOfCoverage,
+                            Price = i.Price,
+                            Risk = (Risk)i.RiskId,
+                            CoverageTypes = i.InsurancesCoverages.Where(ic => ic.InsuranceId == i.Id)
                                                         .Select(ic => (CoverageType)ic.CoverageTypeId)
-                });
+                        });
             }
 
             return records;
@@ -67,13 +64,36 @@ namespace Insurance.Repository
 
         public InsuranceModel GetById(int id)
         {
-            throw new System.NotImplementedException();
+            var insuranceEntity = _context.Insurances.Include(i => i.InsurancesCoverages).SingleOrDefault(i => i.Id == id);
+
+            if (insuranceEntity is null)
+                return null;
+
+            return new InsuranceModel
+            {
+                Id = insuranceEntity.Id,
+                Name = insuranceEntity.Name,
+                Description = insuranceEntity.Description,
+                CoverageRate = insuranceEntity.CoverageRate,
+                StartDate = insuranceEntity.StartDate,
+                MonthsOfCoverage = insuranceEntity.MonthsOfCoverage,
+                Price = insuranceEntity.Price,
+                Risk = (Risk)insuranceEntity.RiskId,
+                CoverageTypes = insuranceEntity.InsurancesCoverages.Where(ic => ic.InsuranceId == insuranceEntity.Id)
+                                                        .Select(ic => (CoverageType)ic.CoverageTypeId)
+            };
         }
 
         public InsuranceModel Update(InsuranceModel insurance)
         {
             throw new System.NotImplementedException();
         }
+
+        public void Delete(int id)
+        {
+            throw new System.NotImplementedException();
+        }
+
         #endregion
 
         #region Private

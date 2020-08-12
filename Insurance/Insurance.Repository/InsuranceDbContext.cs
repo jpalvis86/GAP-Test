@@ -30,17 +30,17 @@ namespace Insurance.Repository
         private static void SetupInsurancesCoveragesBridgeEntity(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<InsuranceCoverageBridgeEntity>()
-                .HasOne(ic => ic.Insurance)
-                .WithMany(c => c.InsurancesCoverages)
-                .HasForeignKey(ic => ic.InsuranceId);
-
-            modelBuilder.Entity<InsuranceCoverageBridgeEntity>()
-                .HasOne(ic => ic.CoverageType)
-                .WithMany(c => c.InsurancesCoverages)
-                .HasForeignKey(ic => ic.CoverageTypeId);
-
-            modelBuilder.Entity<InsuranceCoverageBridgeEntity>()
                 .HasKey(ic => new { ic.InsuranceId, ic.CoverageTypeId });
+
+            modelBuilder.Entity<InsuranceCoverageBridgeEntity>()
+                        .HasOne(ic => ic.Insurance)
+                        .WithMany(c => c.InsurancesCoverages)
+                        .HasForeignKey(ic => ic.InsuranceId);
+
+            modelBuilder.Entity<InsuranceCoverageBridgeEntity>()
+                        .HasOne(ic => ic.CoverageType)
+                        .WithMany(c => c.InsurancesCoverages)
+                        .HasForeignKey(ic => ic.CoverageTypeId);
         }
 
         private static void SeedRiskProfiles(ModelBuilder modelBuilder)
@@ -68,8 +68,8 @@ namespace Insurance.Repository
             };
 
             modelBuilder.Entity<CoverageTypeEntity>().HasData(coverageTypes);
-        } 
-                
+        }
+
         private static void SeedInsurances(ModelBuilder modelBuilder)
         {
             var basicInsurances = new List<InsuranceEntity>
@@ -113,7 +113,7 @@ namespace Insurance.Repository
                 new InsuranceCoverageBridgeEntity{ InsuranceId = 2, CoverageTypeId = 3},
                 new InsuranceCoverageBridgeEntity{ InsuranceId = 2, CoverageTypeId = 4},
                 new InsuranceCoverageBridgeEntity{ InsuranceId = 2, CoverageTypeId = 5}
-                
+
             };
 
             modelBuilder.Entity<InsuranceCoverageBridgeEntity>().HasData(coveragesByInsurance);
