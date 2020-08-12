@@ -5,10 +5,8 @@ using Insurance.WebAPI.Services;
 using Insurance.WebAPI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
-using NSubstitute.Core.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace Insurance.UnitTests.Controllers

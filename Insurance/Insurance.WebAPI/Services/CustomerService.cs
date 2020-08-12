@@ -1,4 +1,5 @@
 ﻿using Insurance.Core.Models;
+using Insurance.Repository;
 using System.Collections.Generic;
 
 namespace Insurance.WebAPI.Services
@@ -12,10 +13,16 @@ namespace Insurance.WebAPI.Services
 
     public class CustomerService : ICustomerService
     {
+        private readonly ICustomerRepository _customerRepository;
+
+        public CustomerService(ICustomerRepository customerRepository)
+        {
+            _customerRepository = customerRepository;
+        }
+
         public IEnumerable<CustomerModel> GetAll()
         {
-            // TODO: Implement this
-            return new List<CustomerModel>();
+            return _customerRepository.Get();
         }
 
         public CustomerModel GetById(int id)
