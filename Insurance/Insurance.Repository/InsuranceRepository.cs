@@ -1,6 +1,8 @@
 ﻿using Insurance.Core.Models;
+using Insurance.Repository.Entities;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Insurance.Repository
 {
@@ -22,9 +24,16 @@ namespace Insurance.Repository
             _context = context;
         }
 
+        #region Public
+
         public InsuranceModel Add(InsuranceModel insurance)
         {
-            throw new System.NotImplementedException();
+            var insuranceEntity = AddInsuranceRecord(insurance);
+
+            SaveInsuranceCoverageRecords(insurance, insuranceEntity);
+
+            insurance.Id = insuranceEntity.Id;
+            return insurance;
         }
 
         public void Delete(int id)
@@ -65,5 +74,42 @@ namespace Insurance.Repository
         {
             throw new System.NotImplementedException();
         }
+        #endregion
+
+        #region Private
+
+        private InsuranceEntity AddInsuranceRecord(InsuranceModel insurance)
+        {
+            var insuranceEntity = new InsuranceEntity
+            {
+                Name = insurance.Name,
+                Description = insurance.Description,
+                CoverageRate = insurance.CoverageRate,
+                RiskId = (int)insurance.Risk,
+                Price = insurance.Price,
+                StartDate = insurance.StartDate,
+                MonthsOfCoverage = insurance.MonthsOfCoverage
+            };
+
+            _context.Insurances.Add(insuranceEntity);
+            _context.SaveChanges();
+
+            return insuranceEntity;
+        }
+
+        private void SaveInsuranceCoverageRecords(InsuranceModel insurance, InsuranceEntity insuranceEntity)
+        {
+            var insuranceCoverageRecords = insurance.CoverageTypes.Select(coverageType => new InsuranceCoverageBridgeEntity
+            {
+                InsuranceId = insuranceEntity.Id,
+                CoverageTypeId = (int)coverageType
+            });
+
+            _context.InsurancesCoverages.AddRange(insuranceCoverageRecords);
+            _context.SaveChanges();
+        }
+
+        #endregion
+
     }
 }
