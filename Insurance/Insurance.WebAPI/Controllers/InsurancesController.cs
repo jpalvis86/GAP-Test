@@ -65,7 +65,8 @@ namespace Insurance.WebAPI.Controllers
                 var updatedInsurance = _insuranceService.Update(insurance);
                 return Ok(updatedInsurance);
             }
-            catch (Exception ex) when (ex is InsuranceDoesNotExistException)
+            catch (Exception ex) when (ex is InsuranceDoesNotExistException ||
+                                        ex is InsuranceCoverageRateForHighRiskProfileIsNotValidException)
             {
                 return BadRequest(ex.Message);
             }

@@ -234,5 +234,33 @@ namespace Insurance.UnitTests.Controllers
             result.Value.Should().Be(expectedException.Message);
         }
 
+        [Fact]
+        public void ReturnBadRequestWhenUpdatingAnInsuranceWithHighRiskProfileAndCoverageAbove50()
+        {
+            // Arrange
+            var updatedInsurance = new InsuranceModel
+            {
+                Id = 999,
+                Name = "Invalid Insurance",
+                Description = "Invalid Insurance Description",
+                Price = 99.99M,
+                CoverageRate = 0.7
+            };
+            var expectedException = new InsuranceCoverageRateForHighRiskProfileIsNotValidException(updatedInsurance.CoverageRate);
+
+            var service = Substitute.For<IInsuranceService>();
+            service.Update(updatedInsurance).Throws(expectedException);
+
+            var controller = new InsurancesController(service);
+
+            // Act
+            var response = controller.Update(updatedInsurance);
+
+            // Assert
+            var result = response as BadRequestObjectResult;
+            result.Should().NotBeNull();
+            result.Value.Should().Be(expectedException.Message);
+        }
+
     }
 }
