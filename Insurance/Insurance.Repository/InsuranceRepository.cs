@@ -86,12 +86,37 @@ namespace Insurance.Repository
 
         public InsuranceModel Update(InsuranceModel insurance)
         {
-            throw new System.NotImplementedException();
+            var insuranceEntity = GetEntityFromId(insurance.Id);
+
+            if (insuranceEntity is null)
+                return null;
+            
+            insuranceEntity.Name = insurance.Name;
+            insuranceEntity.Description = insurance.Name;
+            insuranceEntity.CoverageRate = insurance.CoverageRate;
+            insuranceEntity.Price = insurance.Price;
+            insuranceEntity.StartDate = insurance.StartDate;
+            insuranceEntity.MonthsOfCoverage = insurance.MonthsOfCoverage;
+            insuranceEntity.RiskId = (int)insurance.Risk;
+
+            var insuranceCoverageRecords = insurance.CoverageTypes.Select(coverageType => new InsuranceCoverageBridgeEntity
+            {
+                InsuranceId = insuranceEntity.Id,
+                CoverageTypeId = (int)coverageType
+            });
+
+            _context.InsurancesCoverages.RemoveRange(insuranceEntity.InsurancesCoverages);
+            _context.Insurances.Update(insuranceEntity);
+            _context.InsurancesCoverages.AddRange(insuranceCoverageRecords);
+            
+            _context.SaveChanges();
+
+            return insurance;
         }
 
         public void Delete(int id)
         {
-            var insuranceEntity = _context.Insurances.Include(i => i.InsurancesCoverages).SingleOrDefault(i => i.Id == id);
+            var insuranceEntity = GetEntityFromId(id);
 
             if (insuranceEntity is null)
                 return;
@@ -105,6 +130,11 @@ namespace Insurance.Repository
         #endregion
 
         #region Private
+
+        private InsuranceEntity GetEntityFromId(int id)
+        {
+            return _context.Insurances.Include(i => i.InsurancesCoverages).SingleOrDefault(i => i.Id == id);
+        }
 
         private InsuranceEntity AddInsuranceRecord(InsuranceModel insurance)
         {
