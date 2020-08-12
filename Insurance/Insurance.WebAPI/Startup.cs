@@ -1,19 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Insurance.Repository;
 using Insurance.WebAPI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using System;
+using System.Text.Json.Serialization;
 
 namespace Insurance.WebAPI
 {
@@ -29,7 +24,10 @@ namespace Insurance.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
 
             /*
              * For a Production deployment, 
@@ -64,7 +62,7 @@ namespace Insurance.WebAPI
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();                         
+                app.UseDeveloperExceptionPage();
             }
 
             app.UseHttpsRedirection();
