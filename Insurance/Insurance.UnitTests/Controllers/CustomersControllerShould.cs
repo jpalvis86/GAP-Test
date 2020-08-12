@@ -79,5 +79,24 @@ namespace Insurance.UnitTests.Controllers
             var records = result.Value as CustomerViewModel;
             records.Should().NotBeNull();
         }
+
+        [Fact]
+        public void ReturnNoContentWhenRetrievingMissingCustomer()
+        {
+            // Arrange
+            CustomerModel customer = null;
+
+            var service = Substitute.For<ICustomerService>();
+            service.GetById(Arg.Any<int>()).Returns(customer);
+
+            var controller = new CustomersController(service);
+
+            // Act
+            var response = controller.GetCustomer(Arg.Any<int>());
+
+            // Assert
+            var result = response as NoContentResult;
+            result.Should().NotBeNull();
+        }
     }
 }
