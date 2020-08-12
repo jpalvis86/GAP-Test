@@ -61,7 +61,28 @@ namespace Insurance.UnitTests.Controllers
         public void ReturnOkWhenRetrievingSingleCustomer()
         {
             // Arrange
-            var customer = new CustomerModel { Id = 1, Name = "Jhon Doe" };
+            var insurances = new List<InsuranceModel>
+            {
+                new InsuranceModel
+                {
+                    Id = 1,
+                    Name = "Test",
+                    Description = "Test Insurance",
+                    StartDate = DateTime.Today,
+                    MonthsOfCoverage = 24,
+                    CoverageRate = 0.5,
+                    CoverageTypes = new List<CoverageType> { CoverageType.Earthquake, CoverageType.Robbery },
+                    Risk = Risk.Low,
+                    Price = 999.99M,
+                }
+            };
+
+            var customer = new CustomerModel
+            {
+                Id = 1,
+                Name = "Jhon Doe",
+                Insurances = insurances
+            };
 
             var service = Substitute.For<ICustomerService>();
             service.GetById(customer.Id).Returns(customer);

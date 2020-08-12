@@ -20,15 +20,10 @@ namespace Insurance.WebAPI.Services
             _customerRepository = customerRepository;
         }
 
-        public IEnumerable<CustomerModel> GetAll()
-        {
-            return _customerRepository.Get();
-        }
+        public IEnumerable<CustomerModel> GetAll() => _customerRepository.Get();
 
-        public CustomerModel GetById(int id)
-        {
-            throw new System.NotImplementedException();
-        }
+        public CustomerModel GetById(int id) => _customerRepository.GetById(id);
+
 
         public CustomerModel Update(CustomerModel customer)
         {
