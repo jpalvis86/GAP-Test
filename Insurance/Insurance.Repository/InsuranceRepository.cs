@@ -91,7 +91,15 @@ namespace Insurance.Repository
 
         public void Delete(int id)
         {
-            throw new System.NotImplementedException();
+            var insuranceEntity = _context.Insurances.Include(i => i.InsurancesCoverages).SingleOrDefault(i => i.Id == id);
+
+            if (insuranceEntity is null)
+                return;
+
+            _context.InsurancesCoverages.RemoveRange(insuranceEntity.InsurancesCoverages);
+            _context.Insurances.Remove(insuranceEntity);
+
+            _context.SaveChanges();
         }
 
         #endregion
