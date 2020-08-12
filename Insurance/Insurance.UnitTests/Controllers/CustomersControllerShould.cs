@@ -15,7 +15,7 @@ namespace Insurance.UnitTests.Controllers
     public class CustomersControllerShould
     {
         [Fact]
-        public void ReturnAllCustomers()
+        public void ReturnOkWhenRetrievingCustomers()
         {
             // Arrange
             var customers = new List<CustomerModel>
@@ -38,6 +38,24 @@ namespace Insurance.UnitTests.Controllers
 
             var records = result.Value as IEnumerable<CustomerViewModel>;
             records.Should().HaveCount(customers.Count);
+        }
+
+        [Fact]
+        public void ReturnNoContentWhenThereAreNoCustomers()
+        {
+            // Arrange
+            var customers = new List<CustomerModel>();            
+            var service = Substitute.For<ICustomerService>();
+            service.GetAll().Returns(customers);
+
+            var controller = new CustomersController(service);
+
+            // Act
+            var response = controller.GetAllCustomers();
+
+            // Assert
+            var result = response as NoContentResult;
+            result.Should().NotBeNull();            
         }
     }
 }
