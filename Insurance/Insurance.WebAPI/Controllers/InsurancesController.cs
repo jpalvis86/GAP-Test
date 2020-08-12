@@ -50,11 +50,18 @@ namespace Insurance.WebAPI.Controllers
             return Created($"/insurances/{insurance.Id}", newInsurance);
         }
 
-        [HttpPatch]
-        public IActionResult UpdatePartial(InsuranceModel insurance)
+        [HttpPut]
+        public IActionResult Update(InsuranceModel insurance)
         {
-            var updatedInsurance = _insuranceService.Update(insurance);
-            return Ok(updatedInsurance);
+            try
+            {
+                var updatedInsurance = _insuranceService.Update(insurance);
+                return Ok(updatedInsurance);
+            }
+            catch (Exception ex) when (ex is InsuranceDoesNotExistException)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete]

@@ -41,7 +41,11 @@ namespace Insurance.WebAPI.Services
         {
             ValidateInsuranceData(insurance);
 
-            return _insuranceRepository.Update(insurance);
+            var updatedInsurance = _insuranceRepository.Update(insurance);
+            if (updatedInsurance is null)
+                throw new InsuranceDoesNotExistException(insurance.Id);
+
+            return updatedInsurance;
         }
 
         public void Delete(int insuranceId)
