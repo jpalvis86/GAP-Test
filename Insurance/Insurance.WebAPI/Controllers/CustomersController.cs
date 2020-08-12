@@ -1,10 +1,8 @@
 ﻿using Insurance.WebAPI.Services;
 using Insurance.WebAPI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Insurance.WebAPI.Controllers
 {
@@ -14,7 +12,6 @@ namespace Insurance.WebAPI.Controllers
     public class CustomersController : ControllerBase
     {
         private readonly ICustomerService _customerService;
-
 
         public CustomersController(ICustomerService customerService)
         {
@@ -38,6 +35,26 @@ namespace Insurance.WebAPI.Controllers
             });
 
             return Ok(customersViewModel);
+        }
+
+        [HttpGet]
+        [Route(":id")]
+        public IActionResult GetCustomer(int id)
+        {
+            var customer = _customerService.GetById(id);
+
+            CustomerViewModel customerViewModel;
+
+            if (customer is null)
+                return NoContent();
+
+            customerViewModel = new CustomerViewModel
+            {
+                Id = customer.Id,
+                Name = customer.Name
+            };
+
+            return Ok(customerViewModel);
         }
     }
 }

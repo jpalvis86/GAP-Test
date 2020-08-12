@@ -44,7 +44,7 @@ namespace Insurance.UnitTests.Controllers
         public void ReturnNoContentWhenThereAreNoCustomers()
         {
             // Arrange
-            var customers = new List<CustomerModel>();            
+            var customers = new List<CustomerModel>();
             var service = Substitute.For<ICustomerService>();
             service.GetAll().Returns(customers);
 
@@ -55,7 +55,29 @@ namespace Insurance.UnitTests.Controllers
 
             // Assert
             var result = response as NoContentResult;
-            result.Should().NotBeNull();            
+            result.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void ReturnOkWhenRetrievingSingleCustomer()
+        {
+            // Arrange
+            var customer = new CustomerModel { Id = 1, Name = "Jhon Doe" };
+
+            var service = Substitute.For<ICustomerService>();
+            service.GetById(customer.Id).Returns(customer);
+
+            var controller = new CustomersController(service);
+
+            // Act
+            var response = controller.GetCustomer(customer.Id);
+
+            // Assert
+            var result = response as OkObjectResult;
+            result.Should().NotBeNull();
+
+            var records = result.Value as CustomerViewModel;
+            records.Should().NotBeNull();
         }
     }
 }

@@ -6,6 +6,7 @@ namespace Insurance.WebAPI.Services
     public interface ICustomerService
     {
         IEnumerable<CustomerModel> GetAll();
+        CustomerModel GetById(int id);
     }
 
     public class CustomerService : ICustomerService
@@ -14,6 +15,11 @@ namespace Insurance.WebAPI.Services
         {
             // TODO: Implement this
             return new List<CustomerModel>();
+        }
+
+        public CustomerModel GetById(int id)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
