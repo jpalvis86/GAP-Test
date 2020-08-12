@@ -69,8 +69,9 @@ namespace Insurance.UnitTests.Controllers
         {
             // Arrange
             var insuranceId = -1;
+            var expectedException = new InsuranceIdIsNotValidException(insuranceId);
             var service = Substitute.For<IInsuranceService>();
-            service.GetById(Arg.Any<int>()).Throws(new InsuranceIdIsNotValidException(insuranceId));
+            service.GetById(Arg.Any<int>()).Throws(expectedException);
 
             var controller = new InsurancesController(service);
 
@@ -80,6 +81,38 @@ namespace Insurance.UnitTests.Controllers
             // Assert
             var result = response as BadRequestObjectResult;
             result.Should().NotBeNull();
+            result.Value.Should().Be(expectedException.Message);
+        }
+
+        [Fact]
+        public void ReturnBadRequestWhenAddingNewInsuranceWithHighRiskAndCoverageAbove50()
+        {
+            // Arrange
+            var newInsurance = new InsuranceModel
+            {
+                Name = "New Insurance",
+                Description = "New Insurance Description",
+                CoverageRate = 0.9,
+                CoverageTypes = new List<CoverageType> { CoverageType.Damage },
+                Risk = Risk.Low,
+                StartDate = DateTime.Today.AddDays(1),
+                MonthsOfCoverage = 36,
+                Price = 1199.99M
+            };
+            var expectedException = new InsuranceCoverageRateForHighRiskProfileIsNotValidException(newInsurance.CoverageRate);
+
+            var service = Substitute.For<IInsuranceService>();
+            service.Add(newInsurance).Throws(expectedException);
+
+            var controller = new InsurancesController(service);
+
+            // Act
+            var response = controller.Add(newInsurance);
+
+            // Assert
+            var result = response as BadRequestObjectResult;
+            result.Should().NotBeNull();
+            result.Value.Should().Be(expectedException.Message);
         }
 
         [Fact]
@@ -164,7 +197,7 @@ namespace Insurance.UnitTests.Controllers
             var controller = new InsurancesController(service);
 
             // Act
-            var response = controller.UpdatePartial(updatedInsurance);
+            var response = controller.Update(updatedInsurance);
 
             // Assert
             var result = response as OkObjectResult;
@@ -172,6 +205,61 @@ namespace Insurance.UnitTests.Controllers
 
             var record = result.Value as InsuranceModel;
             record.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void ReturnBadRequestWhenUpdatingANonExistingInsurance()
+        {
+            // Arrange
+            var updatedInsurance = new InsuranceModel
+            {
+                Id = 999,
+                Name = "Missing Insurance",
+                Description = "Missing Insurance Description",
+                Price = 99.99M
+            };
+            var expectedException = new InsuranceDoesNotExistException(updatedInsurance.Id);
+
+            var service = Substitute.For<IInsuranceService>();
+            service.Update(updatedInsurance).Throws(expectedException);
+
+            var controller = new InsurancesController(service);
+
+            // Act
+            var response = controller.Update(updatedInsurance);
+
+            // Assert
+            var result = response as BadRequestObjectResult;
+            result.Should().NotBeNull();
+            result.Value.Should().Be(expectedException.Message);
+        }
+
+        [Fact]
+        public void ReturnBadRequestWhenUpdatingAnInsuranceWithHighRiskProfileAndCoverageAbove50()
+        {
+            // Arrange
+            var updatedInsurance = new InsuranceModel
+            {
+                Id = 999,
+                Name = "Invalid Insurance",
+                Description = "Invalid Insurance Description",
+                Price = 99.99M,
+                CoverageRate = 0.7
+            };
+            var expectedException = new InsuranceCoverageRateForHighRiskProfileIsNotValidException(updatedInsurance.CoverageRate);
+
+            var service = Substitute.For<IInsuranceService>();
+            service.Update(updatedInsurance).Throws(expectedException);
+
+            var controller = new InsurancesController(service);
+
+            // Act
+            var response = controller.Update(updatedInsurance);
+
+            // Assert
+            var result = response as BadRequestObjectResult;
+            result.Should().NotBeNull();
+            result.Value.Should().Be(expectedException.Message);
         }
 
     }

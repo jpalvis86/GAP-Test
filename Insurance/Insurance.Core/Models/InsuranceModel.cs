@@ -18,18 +18,18 @@ namespace Insurance.Core.Models
 
     public enum Risk
     {
-        Low,
-        Medium,
-        MediumHigh,
-        High
+        Low = 1,
+        Medium = 2,
+        MediumHigh = 3,
+        High = 4
     }
 
     public enum CoverageType
     {
-        Earthquake,
-        Fire,
-        Robbery,
-        Damage,
-        Lost
+        Earthquake = 1,
+        Fire = 2,
+        Robbery = 3,
+        Damage = 4,
+        Lost = 5
     }
 }

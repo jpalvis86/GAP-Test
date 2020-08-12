@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Insurance.Repository;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using System;
 
 namespace Insurance.WebAPI
 {
@@ -13,7 +10,24 @@ namespace Insurance.WebAPI
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+
+            var host = CreateHostBuilder(args).Build();
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+
+                try
+                {
+                    var insuranceDbContext = services.GetRequiredService<InsuranceDbContext>();
+                    insuranceDbContext.Database.EnsureCreated();
+
+                    host.Run();
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

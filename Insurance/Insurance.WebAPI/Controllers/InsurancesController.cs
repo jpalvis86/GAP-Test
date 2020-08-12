@@ -7,7 +7,7 @@ using System;
 namespace Insurance.WebAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class InsurancesController : ControllerBase
     {
         private readonly IInsuranceService _insuranceService;
@@ -46,15 +46,30 @@ namespace Insurance.WebAPI.Controllers
         [HttpPost]
         public IActionResult Add(InsuranceModel insurance)
         {
-            var newInsurance = _insuranceService.Add(insurance);
-            return Created($"/insurances/{insurance.Id}", newInsurance);
+            try
+            {
+                var newInsurance = _insuranceService.Add(insurance);
+                return Created($"/insurances/{insurance.Id}", newInsurance);
+            }
+            catch (Exception ex) when (ex is InsuranceCoverageRateForHighRiskProfileIsNotValidException)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        [HttpPatch]
-        public IActionResult UpdatePartial(InsuranceModel insurance)
+        [HttpPut]
+        public IActionResult Update(InsuranceModel insurance)
         {
-            var updatedInsurance = _insuranceService.Update(insurance);
-            return Ok(updatedInsurance);
+            try
+            {
+                var updatedInsurance = _insuranceService.Update(insurance);
+                return Ok(updatedInsurance);
+            }
+            catch (Exception ex) when (ex is InsuranceDoesNotExistException ||
+                                        ex is InsuranceCoverageRateForHighRiskProfileIsNotValidException)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete]
