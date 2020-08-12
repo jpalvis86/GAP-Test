@@ -232,6 +232,36 @@ namespace Insurance.UnitTests.Services
             exception.Should().BeOfType(expectedException.GetType());
         }
 
+        [Fact]
+        public void ThrowAnExceptionWhileUpdatingInsuranceWhenIdDoesNotExist()
+        {
+            // Arrange            
+            var insurance = new InsuranceModel
+            {
+                Id = 1000,
+                Name = "Test Insurance",
+                Description = "Test Insurance Description",
+                CoverageRate = 0.4,
+                CoverageTypes = new List<CoverageType> { CoverageType.Damage },
+                StartDate = DateTime.Today,
+                MonthsOfCoverage = 12,
+                Price = 101.99M
+            };
+
+            var repository = Substitute.For<IInsuranceRepository>();
+            InsuranceModel updatedInsurance = null; // Entity does not exist in DB
+            repository.Update(insurance).Returns(updatedInsurance);
+
+            var service = new InsuranceService(repository);
+
+            // Act
+            var exception = Record.Exception(() => service.Update(insurance));
+
+            // Assert
+            exception.Should().NotBeNull();
+            exception.Should().BeOfType<InsuranceDoesNotExistException>();
+        }
+
         /// <summary>
         /// Returns tuple of an instance of InsuranceModel and an instance of an Exception
         /// based on the scenario required for testing.
