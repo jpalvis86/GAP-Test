@@ -46,8 +46,15 @@ namespace Insurance.WebAPI.Controllers
         [HttpPost]
         public IActionResult Add(InsuranceModel insurance)
         {
-            var newInsurance = _insuranceService.Add(insurance);
-            return Created($"/insurances/{insurance.Id}", newInsurance);
+            try
+            {
+                var newInsurance = _insuranceService.Add(insurance);
+                return Created($"/insurances/{insurance.Id}", newInsurance);
+            }
+            catch (Exception ex) when (ex is InsuranceCoverageRateForHighRiskProfileIsNotValidException)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut]

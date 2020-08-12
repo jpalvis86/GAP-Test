@@ -85,6 +85,37 @@ namespace Insurance.UnitTests.Controllers
         }
 
         [Fact]
+        public void ReturnBadRequestWhenAddingNewInsuranceWithHighRiskAndCoverageAbove50()
+        {
+            // Arrange
+            var newInsurance = new InsuranceModel
+            {
+                Name = "New Insurance",
+                Description = "New Insurance Description",
+                CoverageRate = 0.9,
+                CoverageTypes = new List<CoverageType> { CoverageType.Damage },
+                Risk = Risk.Low,
+                StartDate = DateTime.Today.AddDays(1),
+                MonthsOfCoverage = 36,
+                Price = 1199.99M
+            };
+            var expectedException = new InsuranceCoverageRateForHighRiskProfileIsNotValidException(newInsurance.CoverageRate);
+
+            var service = Substitute.For<IInsuranceService>();
+            service.Add(newInsurance).Throws(expectedException);
+
+            var controller = new InsurancesController(service);
+
+            // Act
+            var response = controller.Add(newInsurance);
+
+            // Assert
+            var result = response as BadRequestObjectResult;
+            result.Should().NotBeNull();
+            result.Value.Should().Be(expectedException.Message);
+        }
+
+        [Fact]
         public void ReturnNoContentWhenRetrievingSingleInsuranceThatDoesNotExist()
         {
             // Arrange
