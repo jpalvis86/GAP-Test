@@ -5,6 +5,7 @@ using Insurance.WebAPI.Services;
 using Insurance.WebAPI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
+using NSubstitute.Core.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -76,7 +77,7 @@ namespace Insurance.UnitTests.Controllers
             var result = response as OkObjectResult;
             result.Should().NotBeNull();
 
-            var records = result.Value as CustomerViewModel;
+            var records = result.Value as CustomerModel;
             records.Should().NotBeNull();
         }
 
@@ -97,6 +98,49 @@ namespace Insurance.UnitTests.Controllers
             // Assert
             var result = response as NoContentResult;
             result.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void ReturnOkWhenUpdatingCustomerInsurances()
+        {
+            // Arrange
+            var insurances = new List<InsuranceModel>
+            {
+                new InsuranceModel
+                {
+                    Id = 1,
+                    Name = "Test",
+                    Description = "Test Insurance",
+                    StartDate = DateTime.Today,
+                    MonthsOfCoverage = 24,
+                    CoverageRate = 0.5,
+                    CoverageTypes = new List<CoverageType> { CoverageType.Earthquake, CoverageType.Robbery },
+                    Risk = Risk.Low,
+                    Price = 999.99M,
+                } 
+            };
+
+            var customer = new CustomerModel
+            {
+                Id = 1,
+                Name = "Jhon Doe",
+                Insurances = insurances
+            };
+
+            var service = Substitute.For<ICustomerService>();
+            service.Update(customer).Returns(customer);
+
+            var controller = new CustomersController(service);
+
+            // Act
+            var response = controller.Update(customer);
+
+            // Assert
+            var result = response as OkObjectResult;
+            result.Should().NotBeNull();
+
+            var records = result.Value as CustomerModel;
+            records.Should().NotBeNull();
         }
     }
 }

@@ -7,6 +7,7 @@ namespace Insurance.WebAPI.Services
     {
         IEnumerable<CustomerModel> GetAll();
         CustomerModel GetById(int id);
+        CustomerModel Update(CustomerModel customer);
     }
 
     public class CustomerService : ICustomerService
@@ -18,6 +19,11 @@ namespace Insurance.WebAPI.Services
         }
 
         public CustomerModel GetById(int id)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public CustomerModel Update(CustomerModel customer)
         {
             throw new System.NotImplementedException();
         }

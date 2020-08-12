@@ -1,4 +1,5 @@
-﻿using Insurance.WebAPI.Services;
+﻿using Insurance.Core.Models;
+using Insurance.WebAPI.Services;
 using Insurance.WebAPI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -43,18 +44,19 @@ namespace Insurance.WebAPI.Controllers
         {
             var customer = _customerService.GetById(id);
 
-            CustomerViewModel customerViewModel;
-
             if (customer is null)
                 return NoContent();
 
-            customerViewModel = new CustomerViewModel
-            {
-                Id = customer.Id,
-                Name = customer.Name
-            };
-
-            return Ok(customerViewModel);
+            return Ok(customer);
         }
+
+        [HttpPost]
+        public IActionResult Update(CustomerModel customer)
+        {
+            customer = _customerService.Update(customer);
+
+            return Ok(customer);
+        }
+
     }
 }
