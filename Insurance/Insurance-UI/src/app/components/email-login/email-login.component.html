@@ -1,0 +1,40 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mat-form-field [color]="email.valid && 'accent'">
+    <input
+      matInput
+      formControlName="email"
+      type="email"
+      placeholder="Email"
+      autocomplete="off"
+    />
+
+    <mat-error *ngIf="email.invalid && email.dirty">
+      You must enter a valid email address
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field [color]="email.valid && 'accent'">
+    <input
+      matInput
+      formControlName="password"
+      type="password"
+      placeholder="Password"
+      autocomplete="off"
+    />
+
+    <mat-error *ngIf="password.invalid && password.dirty">
+      Password must be at least 8 characters long
+    </mat-error>
+  </mat-form-field>
+
+  <mat-error class="server-error">{{ errorMessage }}</mat-error>
+
+  <button
+    mat-raised-button
+    color="accent"
+    type="submit"
+    [disabled]="form.invalid || loading"
+  >
+    Submit
+  </button>
+</form>

@@ -10,11 +10,13 @@ import { LoginComponent } from './components/login/login.component';
 
 import { UserModule } from './modules/user/user.module';
 import { SharedModule } from './modules/shared/shared.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { environment } from 'src/environments/environment';
+import { EmailLoginComponent } from './components/email-login/email-login.component';
 
 @NgModule({
   declarations: [
@@ -22,12 +24,15 @@ import { environment } from 'src/environments/environment';
     InsurancesComponent,
     CustomersComponent,
     LoginComponent,
+    EmailLoginComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     UserModule,
+    FormsModule,
+    ReactiveFormsModule,
     BrowserAnimationsModule,
     SharedModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),

@@ -1,1 +1,12 @@
-<p>login Form here</p>
+<div *ngIf="!(fireAuth.authState | async)">
+  <h1>Login</h1>
+  <app-email-login></app-email-login>
+</div>
+
+<div *ngIf="fireAuth.authState | async as user" class="logout">
+  <p>
+    Logged in as <strong>{{ user.email }}</strong>
+  </p>
+
+  <button mat-stroked-button (click)="fireAuth.auth.signOut()">Logout</button>
+</div>
