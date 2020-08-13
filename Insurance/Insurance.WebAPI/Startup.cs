@@ -89,11 +89,13 @@ namespace Insurance.WebAPI
         private static void InjectRepositories(IServiceCollection services)
         {
             services.AddScoped<IInsuranceRepository, InsuranceRepository>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
         }
 
         private static void InjectServiceDependencies(IServiceCollection services)
         {
             services.AddScoped<IInsuranceService, InsuranceService>();
+            services.AddScoped<ICustomerService, CustomerService>();
         }
     }
 }

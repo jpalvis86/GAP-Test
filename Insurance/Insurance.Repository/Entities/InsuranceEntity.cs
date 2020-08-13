@@ -25,5 +25,8 @@ namespace Insurance.Repository.Entities
 
 
         public IEnumerable<InsuranceCoverageBridgeEntity> InsurancesCoverages { get; set; }
+
+        public int CustomerId { get; set; }
+        public CustomerEntity Customer { get; set; }
     }
 }

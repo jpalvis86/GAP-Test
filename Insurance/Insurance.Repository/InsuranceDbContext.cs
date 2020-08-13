@@ -8,6 +8,8 @@ namespace Insurance.Repository
 {
     public class InsuranceDbContext : DbContext
     {
+        public DbSet<CustomerEntity> Customers { get; set; }
+
         public DbSet<RiskEntity> Risks { get; set; }
         public DbSet<InsuranceEntity> Insurances { get; set; }
         public DbSet<InsuranceCoverageBridgeEntity> InsurancesCoverages { get; set; }
@@ -25,6 +27,15 @@ namespace Insurance.Repository
             SeedCoverageTypes(modelBuilder);
             SeedInsurances(modelBuilder);
             SeedInsurancesCoverageTypes(modelBuilder);
+
+            var customerRecords = new List<CustomerEntity>
+            {
+                new CustomerEntity { Id = 1, Name = "Jhon Doe" },
+                new CustomerEntity { Id = 2, Name = "Michael Jackson" },
+                new CustomerEntity { Id = 3, Name = "Anne Hathaway" }
+            };
+
+            modelBuilder.Entity<CustomerEntity>().HasData(customerRecords);
         }
 
         private static void SetupInsurancesCoveragesBridgeEntity(ModelBuilder modelBuilder)
