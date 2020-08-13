@@ -1,6 +1,9 @@
-﻿using Insurance.Core.Models;
+﻿using Insurance.Core.Exceptions;
+using Insurance.Core.Models;
 using Insurance.Repository;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Insurance.WebAPI.Services
 {
@@ -26,10 +29,29 @@ namespace Insurance.WebAPI.Services
 
         public CustomerModel Update(CustomerModel customer)
         {
-            // TODO: Validate object
+            ValidateDuplicatedInsurances(customer);
+
             _customerRepository.Update(customer);
 
             return customer;
+        }
+
+        private static void ValidateDuplicatedInsurances(CustomerModel customer)
+        {
+            var groupedCustomerInsurances = from i in customer.Insurances
+                                            group i by i.Id into groupedInsurances
+                                            select new
+                                            {
+                                                groupedInsurances.Key,
+                                                Count = groupedInsurances.Count()
+                                            };
+
+            var duplicated = groupedCustomerInsurances.FirstOrDefault(c => c.Count > 1);
+            if (duplicated != null)
+            {
+                var insurance = customer.Insurances.First(i => i.Id == duplicated.Key);
+                throw new CustomerInsurancesDuplicatedException(insurance);
+            }
         }
     }
 }
