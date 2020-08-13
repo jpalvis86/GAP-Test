@@ -9,6 +9,8 @@ namespace Insurance.Repository
     public class InsuranceDbContext : DbContext
     {
         public DbSet<CustomerEntity> Customers { get; set; }
+        public DbSet<CustomerInsurancesEntity> CustomerInsurances { get; set; }
+
 
         public DbSet<RiskEntity> Risks { get; set; }
         public DbSet<InsuranceEntity> Insurances { get; set; }
@@ -21,6 +23,11 @@ namespace Insurance.Repository
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<CustomerInsurancesEntity>()
+                .HasKey(ic => new { ic.CustomerId, ic.InsuranceId });
+
+
+
             SetupInsurancesCoveragesBridgeEntity(modelBuilder);
 
             SeedRiskProfiles(modelBuilder);
@@ -28,6 +35,23 @@ namespace Insurance.Repository
             SeedInsurances(modelBuilder);
             SeedInsurancesCoverageTypes(modelBuilder);
 
+            SeedCustomers(modelBuilder);
+            SeedInsuranceByCustomer(modelBuilder);
+        }
+
+        private static void SeedInsuranceByCustomer(ModelBuilder modelBuilder)
+        {
+            var customerInsurancesRecords = new List<CustomerInsurancesEntity>
+            {
+                new CustomerInsurancesEntity{ CustomerId = 1, InsuranceId=1},
+                new CustomerInsurancesEntity{ CustomerId = 2, InsuranceId=1},
+                new CustomerInsurancesEntity{ CustomerId = 2, InsuranceId=2},
+            };
+            modelBuilder.Entity<CustomerInsurancesEntity>().HasData(customerInsurancesRecords);
+        }
+
+        private static void SeedCustomers(ModelBuilder modelBuilder)
+        {
             var customerRecords = new List<CustomerEntity>
             {
                 new CustomerEntity { Id = 1, Name = "Jhon Doe" },

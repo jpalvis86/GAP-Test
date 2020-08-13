@@ -130,7 +130,7 @@ namespace Insurance.UnitTests.Controllers
             {
                 Id = 1,
                 Name = "Jhon Doe",
-                InsuranceIds = insuranceIds
+                Insurances = insuranceIds
             };
 
             var customer = new CustomerModel

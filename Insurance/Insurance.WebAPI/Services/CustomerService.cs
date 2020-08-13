@@ -32,26 +32,28 @@ namespace Insurance.WebAPI.Services
 
         public CustomerModel Update(CustomerModel customer)
         {
-            ValidateCustomerInsurances(customer);
+            ValidateDuplicatedInsurances(customer);
+            GetCustomerInsurancesData(customer);
 
             _customerRepository.Update(customer);
 
             return customer;
         }
 
-        private void ValidateCustomerInsurances(CustomerModel customer)
+        private void GetCustomerInsurancesData(CustomerModel customer)
         {
-            ValidateDuplicatedInsurances(customer);
-            ValidateMissingInsurances(customer);
-        }
+            var customerInsurances = new List<InsuranceModel>();
 
-        private void ValidateMissingInsurances(CustomerModel customer)
-        {
             foreach (var insurance in customer.Insurances)
             {
-                if (_insuranceRepository.GetById(insurance.Id) is null)
+                var insuranceRecord = _insuranceRepository.GetById(insurance.Id);
+                if (insuranceRecord is null)
                     throw new CustomerInsurancesMissingException(insurance.Id);
+
+                customerInsurances.Add(insuranceRecord);
             }
+
+            customer.Insurances = customerInsurances;
         }
 
         private static void ValidateDuplicatedInsurances(CustomerModel customer)

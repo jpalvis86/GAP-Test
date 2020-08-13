@@ -56,9 +56,9 @@ namespace Insurance.WebAPI.Controllers
         {
             var customerInsurances = new List<InsuranceModel>();
 
-            if (customerParam.InsuranceIds != null && customerParam.InsuranceIds.Any())
+            if (customerParam.Insurances != null && customerParam.Insurances.Any())
             {
-                customerInsurances = customerParam.InsuranceIds.Select(i => new InsuranceModel
+                customerInsurances = customerParam.Insurances.Select(i => new InsuranceModel
                 {
                     Id = i
                 }).ToList();

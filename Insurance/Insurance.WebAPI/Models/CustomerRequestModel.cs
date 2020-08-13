@@ -6,6 +6,6 @@ namespace Insurance.WebAPI.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public IEnumerable<int> InsuranceIds { get; set; }
+        public IEnumerable<int> Insurances { get; set; }
     }
 }
