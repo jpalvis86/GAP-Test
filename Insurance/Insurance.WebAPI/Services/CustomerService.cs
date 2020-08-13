@@ -24,10 +24,12 @@ namespace Insurance.WebAPI.Services
 
         public CustomerModel GetById(int id) => _customerRepository.GetById(id);
 
-
         public CustomerModel Update(CustomerModel customer)
         {
-            throw new System.NotImplementedException();
+            // TODO: Validate object
+            _customerRepository.Update(customer);
+
+            return customer;
         }
     }
 }

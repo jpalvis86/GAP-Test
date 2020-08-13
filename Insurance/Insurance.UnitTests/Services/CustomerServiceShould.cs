@@ -5,6 +5,8 @@ using Insurance.WebAPI.Services;
 using NSubstitute;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using Xunit;
 
 namespace Insurance.UnitTests.Services
@@ -72,5 +74,68 @@ namespace Insurance.UnitTests.Services
             result.Should().NotBeNull();
         }
 
+        [Fact]
+        public void UpdateCustomerInsurancesSuccessfully()
+        {
+            // Arrange
+            var initialCustomer = new CustomerModel
+            {
+                Id = 1,
+                Name = "Jhon Doe",
+                Insurances = new List<InsuranceModel>
+                {
+                    new InsuranceModel
+                    {
+                        Id = 1,
+                        Name = "Test",
+                        Description = "Test Insurance",
+                        StartDate = DateTime.Today,
+                        MonthsOfCoverage = 24,
+                        CoverageRate = 0.5,
+                        CoverageTypes = new List<CoverageType> { CoverageType.Earthquake, CoverageType.Robbery },
+                        Risk = Risk.Low,
+                        Price = 999.99M,
+                    }
+                }
+            };
+
+            // To validate state, it's better to use a custom Stub
+            var initialCustomers = new List<CustomerModel> { initialCustomer };
+            ICustomerRepository repository = new Stubs.CustomerRepositoryStub(initialCustomers);
+
+            var service = new CustomerService(repository);
+
+            var updatedCustomer = new CustomerModel
+            {
+                Id = 1,
+                Name = "Jhon Doe",
+                Insurances = new List<InsuranceModel>
+                {
+                    new InsuranceModel
+                    {
+                        Id = 2,
+                        Name = "New Insurance",
+                        Description = "New Insurance",
+                        StartDate = DateTime.Today,
+                        MonthsOfCoverage = 12,
+                        CoverageRate = 0.9,
+                        CoverageTypes = new List<CoverageType> { CoverageType.Fire },
+                        Risk = Risk.Low,
+                        Price = 599.99M,
+                    }
+                }
+            };
+
+            // Act
+            var result = service.Update(updatedCustomer);
+
+            // Assert
+            result.Should().NotBeNull();
+
+            // Insurance 1 should be removed and only 2 should remain
+            var updatedCustomerRecord = repository.GetById(updatedCustomer.Id);
+            updatedCustomerRecord.Insurances.Should().HaveCount(1);
+            updatedCustomerRecord.Insurances.First().Id.Should().Be(2);
+        }
     }
 }

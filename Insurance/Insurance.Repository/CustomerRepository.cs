@@ -7,6 +7,7 @@ namespace Insurance.Repository
     {
         IEnumerable<CustomerModel> Get();
         CustomerModel GetById(int id);
+        void Update(CustomerModel customer);
     }
 
     public class CustomerRepository : ICustomerRepository
@@ -17,6 +18,11 @@ namespace Insurance.Repository
         }
 
         public CustomerModel GetById(int id)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Update(CustomerModel customer)
         {
             throw new System.NotImplementedException();
         }
