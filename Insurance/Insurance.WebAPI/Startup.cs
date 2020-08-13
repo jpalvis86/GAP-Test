@@ -14,6 +14,8 @@ namespace Insurance.WebAPI
 {
     public class Startup
     {
+        private const string corsPolicyName = "InsuranceApiPolicy";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -24,6 +26,15 @@ namespace Insurance.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: corsPolicyName,
+                    builder =>
+                    {
+                        builder.WithOrigins("https:jpantestgap.azurewebsites.net");
+                    });
+            });
+
             services.AddControllers().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -71,6 +82,8 @@ namespace Insurance.WebAPI
 
             app.UseAuthorization();
 
+            app.UseCors(corsPolicyName);
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -83,7 +96,6 @@ namespace Insurance.WebAPI
                 c.RoutePrefix = string.Empty;
             });
         }
-
 
 
         private static void InjectRepositories(IServiceCollection services)
