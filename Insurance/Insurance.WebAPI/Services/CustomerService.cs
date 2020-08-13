@@ -17,10 +17,13 @@ namespace Insurance.WebAPI.Services
     public class CustomerService : ICustomerService
     {
         private readonly ICustomerRepository _customerRepository;
+        private readonly IInsuranceRepository _insuranceRepository;
 
-        public CustomerService(ICustomerRepository customerRepository)
+        public CustomerService(ICustomerRepository customerRepository
+                            , IInsuranceRepository insuranceRepository)
         {
             _customerRepository = customerRepository;
+            _insuranceRepository = insuranceRepository;
         }
 
         public IEnumerable<CustomerModel> GetAll() => _customerRepository.Get();
@@ -29,11 +32,26 @@ namespace Insurance.WebAPI.Services
 
         public CustomerModel Update(CustomerModel customer)
         {
-            ValidateDuplicatedInsurances(customer);
+            ValidateCustomerInsurances(customer);
 
             _customerRepository.Update(customer);
 
             return customer;
+        }
+
+        private void ValidateCustomerInsurances(CustomerModel customer)
+        {
+            ValidateDuplicatedInsurances(customer);
+            ValidateMissingInsurances(customer);
+        }
+
+        private void ValidateMissingInsurances(CustomerModel customer)
+        {
+            foreach (var insurance in customer.Insurances)
+            {
+                if (_insuranceRepository.GetById(insurance.Id) is null)
+                    throw new CustomerInsurancesMissingException(insurance.Id);
+            }
         }
 
         private static void ValidateDuplicatedInsurances(CustomerModel customer)
