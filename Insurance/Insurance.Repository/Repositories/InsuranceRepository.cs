@@ -14,6 +14,8 @@ namespace Insurance.Repository
         void Delete(int id);
         InsuranceModel Add(InsuranceModel insurance);
         InsuranceModel Update(InsuranceModel insurance);
+
+        IEnumerable<CustomerModel> GetCustomersByInsurance(int insuranceId);
     }
 
     public class InsuranceRepository : IInsuranceRepository
@@ -125,6 +127,11 @@ namespace Insurance.Repository
             _context.Insurances.Remove(insuranceEntity);
 
             _context.SaveChanges();
+        }
+
+        public IEnumerable<CustomerModel> GetCustomersByInsurance(int insuranceId)
+        {
+            throw new System.NotImplementedException();
         }
 
         #endregion

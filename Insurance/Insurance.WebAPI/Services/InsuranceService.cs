@@ -1,6 +1,7 @@
 ﻿using Insurance.Core.Exceptions;
 using Insurance.Core.Models;
 using Insurance.Repository;
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 
@@ -50,6 +51,11 @@ namespace Insurance.WebAPI.Services
 
         public void Delete(int insuranceId)
         {
+            var customersByInsurance = _insuranceRepository.GetCustomersByInsurance(insuranceId);
+
+            if (customersByInsurance.Any())
+                throw new InsuranceIsBeingUsedByCustomersException(insuranceId, customersByInsurance);
+
             _insuranceRepository.Delete(insuranceId);
         }
 
