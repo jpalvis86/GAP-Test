@@ -8,9 +8,16 @@ import { InsurancesComponent } from './components/insurances/insurances.componen
 import { CustomersComponent } from './components/customers/customers.component';
 import { HomeComponent } from './components/home/home.component';
 
+import { UserModule } from './modules/user/user.module';
+
 @NgModule({
-  declarations: [AppComponent, InsurancesComponent, CustomersComponent, HomeComponent],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule],
+  declarations: [
+    AppComponent,
+    InsurancesComponent,
+    CustomersComponent,
+    HomeComponent,
+  ],
+  imports: [BrowserModule, AppRoutingModule, HttpClientModule, UserModule],
   providers: [],
   bootstrap: [AppComponent],
 })
