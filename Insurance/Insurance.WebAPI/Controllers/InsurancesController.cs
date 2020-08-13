@@ -75,8 +75,15 @@ namespace Insurance.WebAPI.Controllers
         [HttpDelete]
         public IActionResult Delete(int insuranceId)
         {
-            _insuranceService.Delete(insuranceId);
-            return NoContent();
+            try
+            {
+                _insuranceService.Delete(insuranceId);
+                return NoContent();
+            }
+            catch (Exception ex) when (ex is InsuranceIsBeingUsedByCustomersException)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
