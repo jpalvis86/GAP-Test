@@ -1,6 +1,7 @@
 ﻿using Insurance.Core.Models;
 using Microsoft.EntityFrameworkCore.Internal;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace Insurance.Repository
@@ -52,7 +53,32 @@ namespace Insurance.Repository
 
         public CustomerModel GetById(int id)
         {
-            throw new System.NotImplementedException();
+            var customerRecord = _context.Customers.SingleOrDefault(c => c.Id == id);
+
+            var insurances = new List<InsuranceModel>();
+
+            if (customerRecord.Insurances != null && customerRecord.Insurances.Any())
+            {
+                insurances = customerRecord.Insurances.Select(i => new InsuranceModel
+                {
+                    Id = i.Id,
+                    Name = i.Name,
+                    Description = i.Description,
+                    CoverageRate = i.CoverageRate,
+                    StartDate = i.StartDate,
+                    MonthsOfCoverage = i.MonthsOfCoverage,
+                    Price = i.Price,
+                    Risk = (Risk)i.RiskId,
+                    CoverageTypes = i.InsurancesCoverages.Where(ic => ic.InsuranceId == i.Id)
+                                                           .Select(ic => (CoverageType)ic.CoverageTypeId)
+                }).ToList();
+            }
+            return new CustomerModel
+            {
+                Id = customerRecord.Id,
+                Name = customerRecord.Name,
+                Insurances = insurances
+            };
         }
 
         public void Update(CustomerModel customer)
