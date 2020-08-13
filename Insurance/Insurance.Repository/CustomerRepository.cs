@@ -106,13 +106,18 @@ namespace Insurance.Repository
 
         public void Update(CustomerModel customer)
         {
-            var customerEntity = new CustomerEntity
-            {
-                Id = customer.Id,
-                Name = customer.Name
-            };
+            var existingInsurancesByCustomer = _context.CustomerInsurances.Where(ci => ci.CustomerId == customer.Id);
+            _context.CustomerInsurances.RemoveRange(existingInsurancesByCustomer);
 
-            _context.Customers.Update(customerEntity);
+            var newInsurancesByCustomer = customer.Insurances.Select(i => new CustomerInsurancesEntity
+            {
+                CustomerId = customer.Id,
+                InsuranceId = i.Id
+            });
+
+            _context.CustomerInsurances.AddRange(newInsurancesByCustomer);
+
+            _context.SaveChanges();
         }
     }
 }
