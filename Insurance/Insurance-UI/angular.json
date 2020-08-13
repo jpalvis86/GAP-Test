@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "Insurance-UI"
+    }
+  },
+  "defaultProject": "Insurance-UI",
+  "cli": {
+    "analytics": "32592550-c879-45c4-869e-864c370d7d1b"
+  }
 }
