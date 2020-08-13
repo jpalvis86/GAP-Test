@@ -15,7 +15,7 @@ namespace Insurance.Core.Exceptions
 
         private static string GetCustomersData(IEnumerable<CustomerModel> customers)
         {
-            return string.Join(',', customers.Select(c => $"Id: {c.Id} - Name: {c.Name}"));
+            return string.Join(", ", customers.Select(c => $"Id: {c.Id} - Name: {c.Name}"));
         }
     }
 }
