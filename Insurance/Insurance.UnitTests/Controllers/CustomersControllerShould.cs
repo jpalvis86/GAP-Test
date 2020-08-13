@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Insurance.Core.Models;
 using Insurance.WebAPI.Controllers;
+using Insurance.WebAPI.Models;
 using Insurance.WebAPI.Services;
 using Insurance.WebAPI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -123,42 +124,38 @@ namespace Insurance.UnitTests.Controllers
         public void ReturnOkWhenUpdatingCustomerInsurances()
         {
             // Arrange
-            var insurances = new List<InsuranceModel>
+            var insuranceIds = new List<int> { 1 };
+
+            var customerRequest = new CustomerRequestModel
             {
-                new InsuranceModel
-                {
-                    Id = 1,
-                    Name = "Test",
-                    Description = "Test Insurance",
-                    StartDate = DateTime.Today,
-                    MonthsOfCoverage = 24,
-                    CoverageRate = 0.5,
-                    CoverageTypes = new List<CoverageType> { CoverageType.Earthquake, CoverageType.Robbery },
-                    Risk = Risk.Low,
-                    Price = 999.99M,
-                } 
+                Id = 1,
+                Name = "Jhon Doe",
+                InsuranceIds = insuranceIds
             };
 
             var customer = new CustomerModel
             {
                 Id = 1,
                 Name = "Jhon Doe",
-                Insurances = insurances
+                Insurances = new List<InsuranceModel>
+                {
+                    new InsuranceModel {Id = 1}
+                }
             };
 
             var service = Substitute.For<ICustomerService>();
-            service.Update(customer).Returns(customer);
+            service.Update(Arg.Any<CustomerModel>()).Returns(customer);
 
             var controller = new CustomersController(service);
 
             // Act
-            var response = controller.Update(customer);
+            var response = controller.Update(customerRequest);
 
             // Assert
             var result = response as OkObjectResult;
             result.Should().NotBeNull();
 
-            var records = result.Value as CustomerModel;
+            var records = result.Value as CustomerRequestModel;
             records.Should().NotBeNull();
         }
     }

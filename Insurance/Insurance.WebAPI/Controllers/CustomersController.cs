@@ -1,4 +1,5 @@
 ﻿using Insurance.Core.Models;
+using Insurance.WebAPI.Models;
 using Insurance.WebAPI.Services;
 using Insurance.WebAPI.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -51,11 +52,28 @@ namespace Insurance.WebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Update(CustomerModel customer)
+        public IActionResult Update(CustomerRequestModel customerParam)
         {
-            customer = _customerService.Update(customer);
+            var customerInsurances = new List<InsuranceModel>();
 
-            return Ok(customer);
+            if (customerParam.InsuranceIds != null && customerParam.InsuranceIds.Any())
+            {
+                customerInsurances = customerParam.InsuranceIds.Select(i => new InsuranceModel
+                {
+                    Id = i
+                }).ToList();
+            }
+
+            var customer = new CustomerModel
+            {
+                Id = customerParam.Id,
+                Name = customerParam.Name,
+                Insurances = customerInsurances
+            };
+
+            _customerService.Update(customer);
+
+            return Ok(customerParam);
         }
 
     }

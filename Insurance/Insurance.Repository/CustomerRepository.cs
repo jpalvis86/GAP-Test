@@ -1,4 +1,5 @@
 ﻿using Insurance.Core.Models;
+using Insurance.Repository.Entities;
 using Microsoft.EntityFrameworkCore.Internal;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -83,7 +84,29 @@ namespace Insurance.Repository
 
         public void Update(CustomerModel customer)
         {
-            throw new System.NotImplementedException();
+            var customerEntity = new CustomerEntity
+            {
+                Id = customer.Id,
+                Name = customer.Name,
+                Insurances = customer.Insurances.Select(i => new InsuranceEntity
+                {
+                    Id = i.Id,
+                    Name = i.Name,
+                    Description = i.Description,
+                    CoverageRate = i.CoverageRate,
+                    StartDate = i.StartDate,
+                    MonthsOfCoverage = i.MonthsOfCoverage,
+                    Price = i.Price,
+                    RiskId = (int)i.Risk,
+                    InsurancesCoverages = i.CoverageTypes.Select(coverageType => new InsuranceCoverageBridgeEntity
+                    {
+                        InsuranceId = i.Id,
+                        CoverageTypeId = (int)coverageType
+                    })
+                })
+            };
+
+            _context.Customers.Update(customerEntity);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Insurance.Core.Exceptions;
 using Insurance.Core.Models;
 using Insurance.Repository;
+using Insurance.WebAPI.Models;
 using System.Collections.Generic;
 using System.Linq;
 
