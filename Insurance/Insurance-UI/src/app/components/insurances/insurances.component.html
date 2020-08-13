@@ -1,1 +1,5 @@
-<p>insurances works!</p>
+<h1>Available Insurances:</h1>
+<br />
+<ul *ngFor="let insurance of insurances">
+  <li>{{ insurance.id }} - {{ insurance.name }}</li>
+</ul>
