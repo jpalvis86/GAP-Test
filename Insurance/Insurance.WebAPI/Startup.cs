@@ -31,7 +31,9 @@ namespace Insurance.WebAPI
                 options.AddPolicy(name: corsPolicyName,
                     builder =>
                     {
-                        builder.WithOrigins("https:jpantestgap.azurewebsites.net");
+                        builder.WithOrigins("https://jpantestgap.azurewebsites.net")
+                                .WithOrigins("http://localhost:4200")
+                                .AllowAnyMethod().AllowAnyHeader();
                     });
             });
 
