@@ -262,5 +262,31 @@ namespace Insurance.UnitTests.Controllers
             result.Value.Should().Be(expectedException.Message);
         }
 
+        [Fact]
+        public void ReturnBadRequestWhenTryingToDeleteAnInsuranceBeingUsedByCustomers()
+        {
+            // Arrange
+            var insuranceId = 1;
+            var customers = new List<CustomerModel>
+            {
+                new CustomerModel{ Id = 1, Name = "Jhon Doe" }
+            };
+
+            var expectedException = new InsuranceIsBeingUsedByCustomersException(insuranceId, customers);
+
+            var service = Substitute.For<IInsuranceService>();
+            service.When(s => s.Delete(insuranceId)).Do(s => throw expectedException);
+
+            var controller = new InsurancesController(service);
+
+            // Act
+            var response = controller.Delete(insuranceId);
+
+            // Assert
+            var result = response as BadRequestObjectResult;
+            result.Should().NotBeNull();
+            result.Value.Should().Be(expectedException.Message);
+        }
+
     }
 }

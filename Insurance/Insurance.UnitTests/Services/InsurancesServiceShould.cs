@@ -90,7 +90,7 @@ namespace Insurance.UnitTests.Services
         }
 
         [Fact]
-        public void DeleteInsurance()
+        public void DeleteInsuranceSuccessfully()
         {
             // Arrange            
             var insuranceId = 1;
@@ -105,6 +105,41 @@ namespace Insurance.UnitTests.Services
 
             // Assert
             exception.Should().BeNull();
+        }
+
+
+        [Fact]
+        public void ThrowExceptionWhileDeletingInsuranceWhenInsuranceIsUsedByCustomers()
+        {
+            // Arrange            
+            var insuranceId = 1;
+
+            var customers = new List<CustomerModel>()
+            {
+                new CustomerModel
+                {
+                    Id = 1,
+                    Name = "Jhon Doe",
+                    Insurances = new List<InsuranceModel>
+                    {
+                        new InsuranceModel { Id = 1 }
+                    }
+                }
+            };
+
+            var repository = Substitute.For<IInsuranceRepository>();
+            repository.GetCustomersByInsurance(insuranceId).Returns(customers);
+
+            var expectedException = new InsuranceIsBeingUsedByCustomersException(insuranceId: 1, customers);
+            var service = new InsuranceService(repository);
+
+            // Act
+            var exception = Record.Exception(() => service.Delete(insuranceId));
+
+            // Assert
+            exception.Should().NotBeNull();
+            exception.Message.Should().Be(expectedException.Message);
+
         }
 
         [Fact]

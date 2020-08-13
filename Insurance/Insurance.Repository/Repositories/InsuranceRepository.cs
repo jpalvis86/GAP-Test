@@ -14,6 +14,8 @@ namespace Insurance.Repository
         void Delete(int id);
         InsuranceModel Add(InsuranceModel insurance);
         InsuranceModel Update(InsuranceModel insurance);
+
+        IEnumerable<CustomerModel> GetCustomersByInsurance(int insuranceId);
     }
 
     public class InsuranceRepository : IInsuranceRepository
@@ -90,7 +92,7 @@ namespace Insurance.Repository
 
             if (insuranceEntity is null)
                 return null;
-            
+
             insuranceEntity.Name = insurance.Name;
             insuranceEntity.Description = insurance.Name;
             insuranceEntity.CoverageRate = insurance.CoverageRate;
@@ -108,7 +110,7 @@ namespace Insurance.Repository
             _context.InsurancesCoverages.RemoveRange(insuranceEntity.InsurancesCoverages);
             _context.Insurances.Update(insuranceEntity);
             _context.InsurancesCoverages.AddRange(insuranceCoverageRecords);
-            
+
             _context.SaveChanges();
 
             return insurance;
@@ -125,6 +127,28 @@ namespace Insurance.Repository
             _context.Insurances.Remove(insuranceEntity);
 
             _context.SaveChanges();
+        }
+
+        public IEnumerable<CustomerModel> GetCustomersByInsurance(int insuranceId)
+        {
+            var customers = new List<CustomerModel>();
+
+            var customerByInsurance = from ci in _context.CustomerInsurances
+                                      join c in _context.Customers
+                                      on ci.CustomerId equals c.Id
+                                      where ci.InsuranceId == insuranceId
+                                      select c;
+
+            if (customerByInsurance.Any())
+            {
+                customers = customerByInsurance.Select(r => new CustomerModel
+                {
+                    Id = r.Id,
+                    Name = r.Name
+                }).ToList();
+            }
+
+            return customers;
         }
 
         #endregion

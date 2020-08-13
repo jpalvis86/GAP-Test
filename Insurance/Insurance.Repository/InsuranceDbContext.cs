@@ -8,6 +8,10 @@ namespace Insurance.Repository
 {
     public class InsuranceDbContext : DbContext
     {
+        public DbSet<CustomerEntity> Customers { get; set; }
+        public DbSet<CustomerInsurancesEntity> CustomerInsurances { get; set; }
+
+
         public DbSet<RiskEntity> Risks { get; set; }
         public DbSet<InsuranceEntity> Insurances { get; set; }
         public DbSet<InsuranceCoverageBridgeEntity> InsurancesCoverages { get; set; }
@@ -19,12 +23,43 @@ namespace Insurance.Repository
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<CustomerInsurancesEntity>()
+                .HasKey(ic => new { ic.CustomerId, ic.InsuranceId });
+
+
+
             SetupInsurancesCoveragesBridgeEntity(modelBuilder);
 
             SeedRiskProfiles(modelBuilder);
             SeedCoverageTypes(modelBuilder);
             SeedInsurances(modelBuilder);
             SeedInsurancesCoverageTypes(modelBuilder);
+
+            SeedCustomers(modelBuilder);
+            SeedInsuranceByCustomer(modelBuilder);
+        }
+
+        private static void SeedInsuranceByCustomer(ModelBuilder modelBuilder)
+        {
+            var customerInsurancesRecords = new List<CustomerInsurancesEntity>
+            {
+                new CustomerInsurancesEntity{ CustomerId = 1, InsuranceId=1},
+                new CustomerInsurancesEntity{ CustomerId = 2, InsuranceId=1},
+                new CustomerInsurancesEntity{ CustomerId = 2, InsuranceId=2},
+            };
+            modelBuilder.Entity<CustomerInsurancesEntity>().HasData(customerInsurancesRecords);
+        }
+
+        private static void SeedCustomers(ModelBuilder modelBuilder)
+        {
+            var customerRecords = new List<CustomerEntity>
+            {
+                new CustomerEntity { Id = 1, Name = "Jhon Doe" },
+                new CustomerEntity { Id = 2, Name = "Michael Jackson" },
+                new CustomerEntity { Id = 3, Name = "Anne Hathaway" }
+            };
+
+            modelBuilder.Entity<CustomerEntity>().HasData(customerRecords);
         }
 
         private static void SetupInsurancesCoveragesBridgeEntity(ModelBuilder modelBuilder)
