@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { HomeComponent } from '../../components/home/home.component';
+import { NavshellComponent } from 'src/app/components/navshell/navshell.component';
 
 const routes: Routes = [
-  { path: '', component: HomeComponent },
+  { path: '', component: NavshellComponent },
   {
     path: 'login',
     loadChildren: () => import('./user.module').then((m) => m.UserModule),
