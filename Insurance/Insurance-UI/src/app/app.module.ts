@@ -6,12 +6,15 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { InsurancesComponent } from './components/insurances/insurances.component';
 import { CustomersComponent } from './components/customers/customers.component';
+import { LoginComponent } from './components/login/login.component';
 
 import { UserModule } from './modules/user/user.module';
 import { SharedModule } from './modules/shared/shared.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { LoginComponent } from './components/login/login.component';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
@@ -27,6 +30,8 @@ import { LoginComponent } from './components/login/login.component';
     UserModule,
     BrowserAnimationsModule,
     SharedModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFireAuthModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
