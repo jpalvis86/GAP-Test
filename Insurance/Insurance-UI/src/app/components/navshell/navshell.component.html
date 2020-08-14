@@ -46,7 +46,16 @@
           >Customers</a
         >
 
-        <a mat-button routerLink="/login">Login</a>
+        <a mat-button routerLink="/login" *ngIf="!(fireAuth.authState | async)"
+          >Login</a
+        >
+        <button
+          mat-stroked-button
+          *ngIf="fireAuth.authState | async"
+          (click)="fireAuth.signOut()"
+        >
+          Logout
+        </button>
       </div>
     </mat-toolbar>
 
