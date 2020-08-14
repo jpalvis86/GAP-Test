@@ -24,6 +24,15 @@ export class InsurancesComponent implements OnInit {
     { label: 'High', value: 'High' },
   ];
 
+  selectedCoverageTypes: SelectItem[];
+  coverageTypes: SelectItem[] = [
+    { label: 'Earthquake', value: 'Earthquake' },
+    { label: 'Fire', value: 'Fire' },
+    { label: 'Robbery', value: 'Robbery' },
+    { label: 'Damage', value: 'Damage' },
+    { label: 'Lost', value: 'Lost' },
+  ];
+
   selectedInsurances: Insurance[];
 
   submitted: boolean;
@@ -57,6 +66,11 @@ export class InsurancesComponent implements OnInit {
       label: this.insurance.risk,
       value: this.insurance.risk,
     };
+
+    this.selectedCoverageTypes = this.insurance.coverageTypes.map((c) => ({
+      label: c,
+      value: c,
+    }));
 
     console.log(this.insurance);
     this.insuranceDialog = true;
@@ -104,10 +118,11 @@ export class InsurancesComponent implements OnInit {
 
     if (this.insurance.name.trim()) {
       if (this.insurance.id) {
-        this.insurance.risk = this.selectedRisk.value;
+        this.formatValuesBeforeSending();
 
-        this.insuranceService.updateInsurance(this.insurance).subscribe();
-        this.refreshInsurances();
+        this.insuranceService.updateInsurance(this.insurance).subscribe(() => {
+          this.refreshInsurances();
+        });
         this.messageService.add({
           severity: 'success',
           summary: 'Successful',
@@ -115,11 +130,11 @@ export class InsurancesComponent implements OnInit {
           life: 3000,
         });
       } else {
-        this.insuranceService
-          .addInsurance(this.insurance)
-          .subscribe((insurance) => {
-            this.insurances = [...this.insurances, insurance];
-          });
+        this.formatValuesBeforeSending();
+
+        this.insuranceService.addInsurance(this.insurance).subscribe(() => {
+          this.refreshInsurances();
+        });
         this.messageService.add({
           severity: 'success',
           summary: 'Successful',
@@ -132,5 +147,15 @@ export class InsurancesComponent implements OnInit {
       this.insuranceDialog = false;
       this.insurance = {};
     }
+  }
+
+  private formatValuesBeforeSending(): void {
+    this.insurance.risk = this.selectedRisk.value;
+    this.insurance.coverageTypes = this.selectedCoverageTypes.map(
+      (c) => c.value
+    );
+
+    console.log(this.insurance.coverageTypes);
+    this.insurance.coverageRate /= 100;
   }
 }

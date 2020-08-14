@@ -6,4 +6,5 @@ export interface Insurance {
   monthsOfCoverage: number;
   coverageRate: number;
   risk: string;
+  coverageTypes: string[];
 }

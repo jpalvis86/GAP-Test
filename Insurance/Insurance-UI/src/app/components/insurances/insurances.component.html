@@ -159,7 +159,8 @@
           [(ngModel)]="insurance.coverageRate"
           required
           autofocus
-          mode="percent"
+          mode="decimal"
+          suffix="%"
         ></p-inputNumber>
         <small class="p-invalid" *ngIf="submitted && !insurance.coverageRate"
           >Rate is required.</small
@@ -189,6 +190,19 @@
           class="p-invalid"
           *ngIf="submitted && !insurance.monthsOfCoverage"
           >Months is required.</small
+        >
+      </div>
+      <div class="p-field">
+        <label for="coverageTypes">Coverage Types</label>
+        <p-multiSelect
+          id="coverageTypes"
+          [options]="coverageTypes"
+          [(ngModel)]="selectedCoverageTypes"
+          optionLabel="label"
+          required
+        ></p-multiSelect>
+        <small class="p-invalid" *ngIf="submitted && !selectedCoverageTypes"
+          >At least one coverage type is required.</small
         >
       </div>
     </div>
