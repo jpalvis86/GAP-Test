@@ -1,1 +1,5 @@
-<p>customers works!</p>
+<h1>Available Customers:</h1>
+<br />
+<ul *ngFor="let customer of customers">
+  <li>{{ customer.id }} - {{ customer.name }}</li>
+</ul>

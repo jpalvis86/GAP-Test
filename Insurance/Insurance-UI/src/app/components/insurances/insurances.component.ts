@@ -14,7 +14,6 @@ export class InsurancesComponent implements OnInit {
   insurances: Insurance[];
   ngOnInit(): void {
     this.insuranceService.getInsurances().subscribe((insurances) => {
-      console.log(insurances);
       this.insurances = insurances;
     });
   }
