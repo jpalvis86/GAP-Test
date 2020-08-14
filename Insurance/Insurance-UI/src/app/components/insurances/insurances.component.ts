@@ -62,6 +62,7 @@ export class InsurancesComponent implements OnInit {
 
   editInsurance(insurance: Insurance): void {
     this.insurance = { ...insurance };
+    this.insurance.coverageRate *= 100;
     this.selectedRisk = {
       label: this.insurance.risk,
       value: this.insurance.risk,
