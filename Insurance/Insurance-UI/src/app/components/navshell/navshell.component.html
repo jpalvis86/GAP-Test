@@ -36,8 +36,15 @@
 
       <span class="fill-space"></span>
       <div *ngIf="!(isHandset$ | async)">
-        <a mat-button routerLink="/insurances">Insurances</a>
-        <a mat-button routerLink="/customers">Customers</a>
+        <a
+          mat-button
+          routerLink="/insurances"
+          *ngIf="fireAuth.authState | async"
+          >Insurances</a
+        >
+        <a mat-button routerLink="/customers" *ngIf="fireAuth.authState | async"
+          >Customers</a
+        >
 
         <a mat-button routerLink="/login">Login</a>
       </div>
