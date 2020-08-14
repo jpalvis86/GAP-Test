@@ -29,20 +29,20 @@ namespace Insurance.Repository
 
             if (_context.Customers.Any())
             {
-                var insurancesByCustomer = (from c in _context.Customers
-                                            join ci in _context.CustomerInsurances
-                                            on c.Id equals ci.CustomerId into customerInsurances
-                                            from ci2 in customerInsurances.DefaultIfEmpty()
-                                            join i in _context.Insurances.Include(c => c.InsurancesCoverages)
-                                            on ci2.InsuranceId equals i.Id into insuranceDetails
-                                            from i2 in insuranceDetails.DefaultIfEmpty()
-                                            select new
-                                            {
-                                                Customer = c,
-                                                Insurance = i2
-                                            }).ToList();
+                var customersAndInsurances = (from c in _context.Customers
+                                              join ci in _context.CustomerInsurances
+                                              on c.Id equals ci.CustomerId into customerInsurances
+                                              from ci2 in customerInsurances.DefaultIfEmpty()
+                                              join i in _context.Insurances.Include(c => c.InsurancesCoverages)
+                                              on ci2.InsuranceId equals i.Id into insuranceDetails
+                                              from i2 in insuranceDetails.DefaultIfEmpty()
+                                              select new
+                                              {
+                                                  Customer = c,
+                                                  Insurance = i2
+                                              }).ToList();
 
-                customers = (from d in insurancesByCustomer
+                customers = (from d in customersAndInsurances
                              group d by d.Customer into g
                              select new CustomerModel
                              {
