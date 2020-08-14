@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 
 import { Customer } from '../models/customer';
+import { CustomerInsurance } from '../models/customerinsurance';
 
 import { Observable } from 'rxjs';
 
@@ -23,8 +24,8 @@ export class CustomerService {
     return this.http.get<Customer[]>(this.url, this.httpOptions);
   }
 
-  getCustomer(customerId: number): Observable<Customer> {
-    return this.http.get<Customer>(
+  getCustomer(customerId: number): Observable<CustomerInsurance> {
+    return this.http.get<CustomerInsurance>(
       this.url + '/' + customerId,
       this.httpOptions
     );

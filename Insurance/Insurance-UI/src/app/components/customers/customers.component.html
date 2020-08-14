@@ -48,6 +48,15 @@
       <small class="p-invalid" *ngIf="submitted && !customer.name"
         >Name is required.</small
       >
+      <div class="p-field">
+        <label for="insurances">Insurances</label>
+        <p-multiSelect
+          id="insurances"
+          [options]="insurances"
+          [(ngModel)]="selectedInsurances"
+          optionLabel="label"
+        ></p-multiSelect>
+      </div>
     </div>
   </ng-template>
 

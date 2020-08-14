@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 
+import { Insurance } from '../../models/insurance';
+import { InsuranceService } from '../../services/insurance.service';
+
 import { Customer } from '../../models/customer';
 import { CustomerService } from '../../services/customer.service';
 
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService, SelectItem } from 'primeng/api';
 
 @Component({
   selector: 'app-customers',
@@ -15,23 +18,38 @@ export class CustomersComponent implements OnInit {
   customer: any;
   customers: Customer[];
 
+  insurances: SelectItem[];
+  selectedInsurances: SelectItem[];
+
   submitted: boolean;
   customerDialog: boolean;
 
   constructor(
     private customerService: CustomerService,
+    private insuranceService: InsuranceService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService
   ) {}
 
   ngOnInit(): void {
+    this.refreshInsurances();
     this.refreshCustomers();
+  }
+
+  private refreshInsurances(): void {
+    this.insuranceService.getInsurances().subscribe((insurances) => {
+      this.insurances = insurances.map((i) => ({
+        label: i.name,
+        value: i.id,
+      }));
+    });
   }
 
   private refreshCustomers(): void {
     this.customerService.getCustomers().subscribe((customers) => {
       this.customers = customers;
       console.log(this.customers);
+      this.selectedInsurances = [];
     });
   }
 
@@ -41,6 +59,11 @@ export class CustomersComponent implements OnInit {
       .subscribe((customerResponse) => {
         this.customer = customerResponse;
         console.log(this.customer);
+        this.selectedInsurances = this.customer.insurances.map((i) => ({
+          label: i.name,
+          value: i.id,
+        }));
+        console.log(this.selectedInsurances);
       });
     this.customerDialog = true;
   }
