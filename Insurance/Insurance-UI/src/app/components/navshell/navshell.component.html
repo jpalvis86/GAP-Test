@@ -51,7 +51,7 @@
         <button
           mat-stroked-button
           *ngIf="fireAuth.authState | async"
-          (click)="fireAuth.signOut()"
+          (click)="logOut()"
         >
           Logout
         </button>

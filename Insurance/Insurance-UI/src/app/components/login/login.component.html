@@ -1,5 +1,4 @@
 <div *ngIf="!(fireAuth.authState | async)">
-  <h1>Login</h1>
   <app-email-login></app-email-login>
 </div>
 
@@ -7,6 +6,4 @@
   <p>
     Logged in as <strong>{{ user.email }}</strong>
   </p>
-
- 
 </div>
