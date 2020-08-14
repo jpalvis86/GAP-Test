@@ -89,7 +89,6 @@ export class InsurancesComponent implements OnInit {
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        console.log(insurance);
         this.insuranceService.deleteInsurance(insurance.id).subscribe(
           () => {
             this.refreshInsurances();

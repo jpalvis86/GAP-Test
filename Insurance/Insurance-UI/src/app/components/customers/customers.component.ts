@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Insurance } from '../../models/insurance';
 import { InsuranceService } from '../../services/insurance.service';
 
 import { Customer } from '../../models/customer';
@@ -48,7 +47,6 @@ export class CustomersComponent implements OnInit {
   private refreshCustomers(): void {
     this.customerService.getCustomers().subscribe((customers) => {
       this.customers = customers;
-      console.log(this.customers);
       this.selectedInsurances = [];
     });
   }
@@ -58,12 +56,10 @@ export class CustomersComponent implements OnInit {
       .getCustomer(customer.id)
       .subscribe((customerResponse) => {
         this.customer = customerResponse;
-        console.log(this.customer);
         this.selectedInsurances = this.customer.insurances.map((i) => ({
           label: i.name,
           value: i.id,
         }));
-        console.log(this.selectedInsurances);
       });
     this.customerDialog = true;
   }
