@@ -28,6 +28,10 @@ export class InsurancesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.refreshInsurances();
+  }
+
+  private refreshInsurances(): void {
     this.insuranceService.getInsurances().subscribe((insurances) => {
       this.insurances = insurances;
     });
@@ -37,26 +41,6 @@ export class InsurancesComponent implements OnInit {
     this.insurance = {};
     this.submitted = false;
     this.insuranceDialog = true;
-  }
-
-  deleteSelectedInsurances(): void {
-    this.confirmationService.confirm({
-      message: 'Are you sure you want to delete the selected insurances?',
-      header: 'Confirm',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.insurances = this.insurances.filter(
-          (val) => !this.selectedInsurances.includes(val)
-        );
-        this.selectedInsurances = null;
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Successful',
-          detail: 'Insurances Deleted',
-          life: 3000,
-        });
-      },
-    });
   }
 
   editInsurance(insurance: Insurance): void {
@@ -73,16 +57,28 @@ export class InsurancesComponent implements OnInit {
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this.insurances = this.insurances.filter(
-          (val) => val.id !== insurance.id
+        console.log(insurance);
+        this.insuranceService.deleteInsurance(insurance.id).subscribe(
+          () => {
+            this.insurance = {};
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Successful',
+              detail: 'Insurance Deleted',
+              life: 3000,
+            });
+          },
+          (error) => {
+            console.log(error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: error.error,
+              life: 5000,
+            });
+          }
         );
-        this.insurance = {};
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Successful',
-          detail: 'Insurance Deleted',
-          life: 3000,
-        });
+        this.refreshInsurances();
       },
     });
   }
@@ -97,6 +93,8 @@ export class InsurancesComponent implements OnInit {
 
     if (this.insurance.name.trim()) {
       if (this.insurance.id) {
+        this.insuranceService.updateInsurance(this.insurance).subscribe();
+        this.refreshInsurances();
         this.messageService.add({
           severity: 'success',
           summary: 'Successful',
@@ -104,8 +102,11 @@ export class InsurancesComponent implements OnInit {
           life: 3000,
         });
       } else {
-        this.insurance.image = 'insurance-placeholder.svg';
-        this.insurances.push(this.insurance);
+        this.insuranceService
+          .addInsurance(this.insurance)
+          .subscribe((insurance) => {
+            this.insurances = [...this.insurances, insurance];
+          });
         this.messageService.add({
           severity: 'success',
           summary: 'Successful',
