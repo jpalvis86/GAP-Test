@@ -19,6 +19,7 @@ import { environment } from 'src/environments/environment';
 import { EmailLoginComponent } from './components/email-login/email-login.component';
 
 import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { TableModule } from 'primeng/table';
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
     TableModule,
+    ButtonModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
