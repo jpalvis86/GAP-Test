@@ -34,7 +34,7 @@ export class InsurancesComponent implements OnInit {
     { label: 'Lost', value: 'Lost' },
   ];
 
-  selectedDate = '2020-02-22';
+  selectedDate = this.datepipe.transform(new Date(), 'yyyy-MM-dd');
   selectedInsurances: Insurance[];
 
   submitted: boolean;
@@ -81,7 +81,6 @@ export class InsurancesComponent implements OnInit {
       value: c,
     }));
 
-    console.log(this.insurance);
     this.insuranceDialog = true;
   }
 
@@ -94,6 +93,7 @@ export class InsurancesComponent implements OnInit {
         console.log(insurance);
         this.insuranceService.deleteInsurance(insurance.id).subscribe(
           () => {
+            this.refreshInsurances();
             this.insurance = {};
             this.messageService.add({
               severity: 'success',
@@ -112,7 +112,6 @@ export class InsurancesComponent implements OnInit {
             });
           }
         );
-        this.refreshInsurances();
       },
     });
   }
@@ -129,27 +128,49 @@ export class InsurancesComponent implements OnInit {
       if (this.insurance.id) {
         this.formatValuesBeforeSending();
 
-        this.insuranceService.updateInsurance(this.insurance).subscribe(() => {
-          this.refreshInsurances();
-        });
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Successful',
-          detail: 'Insurance Updated',
-          life: 3000,
-        });
+        this.insuranceService.updateInsurance(this.insurance).subscribe(
+          () => {
+            this.refreshInsurances();
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Successful',
+              detail: 'Insurance Updated',
+              life: 3000,
+            });
+          },
+          (error) => {
+            console.log(error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: error.error,
+              life: 5000,
+            });
+          }
+        );
       } else {
         this.formatValuesBeforeSending();
 
-        this.insuranceService.addInsurance(this.insurance).subscribe(() => {
-          this.refreshInsurances();
-        });
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Successful',
-          detail: 'Insurance Created',
-          life: 3000,
-        });
+        this.insuranceService.addInsurance(this.insurance).subscribe(
+          () => {
+            this.refreshInsurances();
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Successful',
+              detail: 'Insurance Created',
+              life: 3000,
+            });
+          },
+          (error) => {
+            console.log(error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: error.error,
+              life: 5000,
+            });
+          }
+        );
       }
 
       this.insurances = [...this.insurances];
