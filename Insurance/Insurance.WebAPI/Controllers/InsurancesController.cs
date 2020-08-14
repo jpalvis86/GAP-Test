@@ -51,7 +51,11 @@ namespace Insurance.WebAPI.Controllers
                 var newInsurance = _insuranceService.Add(insurance);
                 return Created($"/insurances/{insurance.Id}", newInsurance);
             }
-            catch (Exception ex) when (ex is InsuranceCoverageRateForHighRiskProfileIsNotValidException)
+            catch (Exception ex) when (ex is InsuranceCoverageRateForHighRiskProfileIsNotValidException || 
+                                        ex is InsurancePriceIsNotValidException ||
+                                        ex is InsuranceCoverageRateIsNotValidException ||
+                                        ex is InsuranceStartDateIsNotValidException ||
+                                        ex is InsuranceMonthsPeriodIsNotValidException)
             {
                 return BadRequest(ex.Message);
             }
@@ -66,7 +70,11 @@ namespace Insurance.WebAPI.Controllers
                 return Ok(updatedInsurance);
             }
             catch (Exception ex) when (ex is InsuranceDoesNotExistException ||
-                                        ex is InsuranceCoverageRateForHighRiskProfileIsNotValidException)
+                                        ex is InsuranceCoverageRateForHighRiskProfileIsNotValidException ||
+                                        ex is InsurancePriceIsNotValidException ||
+                                        ex is InsuranceCoverageRateIsNotValidException ||
+                                        ex is InsuranceStartDateIsNotValidException ||
+                                        ex is InsuranceMonthsPeriodIsNotValidException)
             {
                 return BadRequest(ex.Message);
             }
