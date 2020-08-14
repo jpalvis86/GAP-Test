@@ -6,6 +6,7 @@ import {
   AbstractControl,
 } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-email-login',
   templateUrl: './email-login.component.html',
@@ -18,7 +19,8 @@ export class EmailLoginComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private fireAuth: AngularFireAuth
+    private fireAuth: AngularFireAuth,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -43,6 +45,7 @@ export class EmailLoginComponent implements OnInit {
 
     try {
       await this.fireAuth.signInWithEmailAndPassword(email, password);
+      this.router.navigate(['/customers']);
     } catch (error) {
       this.errorMessage = error;
     }

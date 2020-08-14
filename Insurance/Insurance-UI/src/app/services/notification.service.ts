@@ -20,7 +20,7 @@ export class NotificationService {
 
     return this.snackBar._openedSnackBarRef
       .onAction()
-      .pipe(tap((_) => this.router.navigate(['/Login'])))
+      .pipe(tap((_) => this.router.navigate(['/login'])))
       .subscribe();
   }
 }
