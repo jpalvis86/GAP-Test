@@ -1,6 +1,18 @@
 <p-toast></p-toast>
 
 <div class="card">
+  <p-toolbar styleClass="p-mb-4">
+    <ng-template pTemplate="left">
+      <button
+        pButton
+        pRipple
+        label="New"
+        icon="pi pi-plus"
+        class="p-button-success p-mr-2"
+        (click)="openNew()"
+      ></button>
+    </ng-template>
+  </p-toolbar>
   <p-table
     #dt
     [value]="insurances"
@@ -20,9 +32,6 @@
   >
     <ng-template pTemplate="header">
       <tr>
-        <th style="width: 3rem;">
-          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-        </th>
         <th pSortableColumn="id">Id <p-sortIcon field="id"></p-sortIcon></th>
         <th pSortableColumn="name">
           Name <p-sortIcon field="name"></p-sortIcon>
@@ -50,9 +59,6 @@
     </ng-template>
     <ng-template pTemplate="body" let-insurance>
       <tr>
-        <td>
-          <p-tableCheckbox [value]="insurance"></p-tableCheckbox>
-        </td>
         <td>{{ insurance.id }}</td>
         <td>{{ insurance.name }}</td>
         <td>{{ insurance.description }}</td>
@@ -126,7 +132,8 @@
           [(ngModel)]="insurance.price"
           mode="currency"
           currency="USD"
-          locale="en-US"
+          required
+          autofocus
         ></p-inputNumber>
         <small class="p-invalid" *ngIf="submitted && !insurance.price"
           >Price is required.</small
@@ -134,16 +141,28 @@
       </div>
       <div class="p-field">
         <label for="risk">Risk</label>
-        <input
-          type="text"
-          pInputText
+        <p-dropdown
           id="risk"
-          [(ngModel)]="insurance.risk"
+          [options]="risks"
+          [(ngModel)]="selectedRisk"
+          optionLabel="label"
+          required
+        ></p-dropdown>
+        <small class="p-invalid" *ngIf="submitted && !selectedRisk"
+          >Risk is required.</small
+        >
+      </div>
+      <div class="p-field">
+        <label for="coverageRate">Rate</label>
+        <p-inputNumber
+          id="coverageRate"
+          [(ngModel)]="insurance.coverageRate"
           required
           autofocus
-        />
-        <small class="p-invalid" *ngIf="submitted && !insurance.risk"
-          >Risk is required.</small
+          mode="percent"
+        ></p-inputNumber>
+        <small class="p-invalid" *ngIf="submitted && !insurance.coverageRate"
+          >Rate is required.</small
         >
       </div>
       <div class="p-field">

@@ -5,4 +5,5 @@ export interface Insurance {
   startDate: Date;
   monthsOfCoverage: number;
   coverageRate: number;
+  risk: string;
 }

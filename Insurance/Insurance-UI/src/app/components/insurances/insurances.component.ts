@@ -4,7 +4,7 @@ import { Insurance } from '../../models/insurance';
 import { InsuranceService } from '../../services/insurance.service';
 
 import { ConfirmationService } from 'primeng/api';
-import { MessageService } from 'primeng/api';
+import { MessageService, SelectItem } from 'primeng/api';
 
 @Component({
   selector: 'app-insurances',
@@ -15,6 +15,14 @@ import { MessageService } from 'primeng/api';
 export class InsurancesComponent implements OnInit {
   insurances: Insurance[];
   insurance: any;
+
+  selectedRisk: SelectItem;
+  risks: SelectItem[] = [
+    { label: 'Low', value: 'Low' },
+    { label: 'Medium', value: 'Medium' },
+    { label: 'MediumHigh', value: 'MediumHigh' },
+    { label: 'High', value: 'High' },
+  ];
 
   selectedInsurances: Insurance[];
 
@@ -45,9 +53,12 @@ export class InsurancesComponent implements OnInit {
 
   editInsurance(insurance: Insurance): void {
     this.insurance = { ...insurance };
+    this.selectedRisk = {
+      label: this.insurance.risk,
+      value: this.insurance.risk,
+    };
 
     console.log(this.insurance);
-
     this.insuranceDialog = true;
   }
 
@@ -93,6 +104,8 @@ export class InsurancesComponent implements OnInit {
 
     if (this.insurance.name.trim()) {
       if (this.insurance.id) {
+        this.insurance.risk = this.selectedRisk.value;
+
         this.insuranceService.updateInsurance(this.insurance).subscribe();
         this.refreshInsurances();
         this.messageService.add({
