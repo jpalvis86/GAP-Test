@@ -12,15 +12,25 @@ import { Observable } from 'rxjs';
 export class CustomerService {
   private url: string = environment.apiUrl + '/api/customers';
 
+  private httpOptions = {
+    headers: new HttpHeaders({
+      'Access-Control-Allow-Origin': '*',
+    }),
+  };
   constructor(private http: HttpClient) {}
 
   getCustomers(): Observable<Customer[]> {
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Access-Control-Allow-Origin': '*',
-      }),
-    };
+    return this.http.get<Customer[]>(this.url, this.httpOptions);
+  }
 
-    return this.http.get<Customer[]>(this.url, httpOptions);
+  getCustomer(customerId: number): Observable<Customer> {
+    return this.http.get<Customer>(
+      this.url + '/' + customerId,
+      this.httpOptions
+    );
+  }
+
+  updateCustomers(customer: Customer): Observable<Customer> {
+    return this.http.post<Customer>(this.url, customer, this.httpOptions);
   }
 }

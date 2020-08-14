@@ -3,8 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Insurance } from '../../models/insurance';
 import { InsuranceService } from '../../services/insurance.service';
 
-import { ConfirmationService } from 'primeng/api';
-import { MessageService, SelectItem } from 'primeng/api';
+import { ConfirmationService, MessageService, SelectItem } from 'primeng/api';
 import { DatePipe } from '@angular/common';
 
 @Component({
