@@ -30,6 +30,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { ToolbarModule } from 'primeng/toolbar';
 
 @NgModule({
@@ -62,6 +64,8 @@ import { ToolbarModule } from 'primeng/toolbar';
     ButtonModule,
     ToastModule,
     InputTextModule,
+    InputNumberModule,
+    InputTextareaModule,
     ProgressBarModule,
     ToolbarModule,
   ],

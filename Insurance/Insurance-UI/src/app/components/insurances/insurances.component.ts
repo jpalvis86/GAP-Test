@@ -61,6 +61,9 @@ export class InsurancesComponent implements OnInit {
 
   editInsurance(insurance: Insurance): void {
     this.insurance = { ...insurance };
+
+    console.log(this.insurance);
+
     this.insuranceDialog = true;
   }
 
