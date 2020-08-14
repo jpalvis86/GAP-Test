@@ -29,15 +29,17 @@ namespace Insurance.Repository
 
             if (_context.Customers.Any())
             {
-                var insurancesByCustomer = (from ci in _context.CustomerInsurances
-                                            join c in _context.Customers
-                                            on ci.CustomerId equals c.Id
+                var insurancesByCustomer = (from c in _context.Customers
+                                            join ci in _context.CustomerInsurances
+                                            on c.Id equals ci.CustomerId into customerInsurances
+                                            from ci2 in customerInsurances.DefaultIfEmpty()
                                             join i in _context.Insurances.Include(c => c.InsurancesCoverages)
-                                            on ci.InsuranceId equals i.Id
+                                            on ci2.InsuranceId equals i.Id into insuranceDetails
+                                            from i2 in insuranceDetails.DefaultIfEmpty()
                                             select new
                                             {
                                                 Customer = c,
-                                                Insurance = i
+                                                Insurance = i2
                                             }).ToList();
 
                 customers = (from d in insurancesByCustomer

@@ -76,11 +76,14 @@ export class CustomersComponent implements OnInit {
   saveCustomer(): void {
     this.submitted = true;
 
+    this.customer.insurances = this.selectedInsurances.map((c) => c.value);
+
     if (this.customer.name.trim()) {
       if (this.customer.id) {
         this.customerService.updateCustomers(this.customer).subscribe(
           () => {
             this.refreshCustomers();
+            this.refreshInsurances();
             this.messageService.add({
               severity: 'success',
               summary: 'Successful',
