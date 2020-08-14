@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://localhost:44358',
+  apiUrl: 'https://jpangaptechtest.azurewebsites.net',
   firebaseConfig: {
     apiKey: 'AIzaSyDuUItQiPX7j3RBHHm1r90uvoe3vOo_ml8',
     authDomain: 'jpan-gap-tech-test.firebaseapp.com',
