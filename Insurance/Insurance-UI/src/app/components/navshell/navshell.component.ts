@@ -24,8 +24,8 @@ export class NavshellComponent {
     private router: Router
   ) {}
 
-  logOut(): void {
-    this.fireAuth.signOut();
+  async logOut(): Promise<void> {
+    await this.fireAuth.signOut();
     this.router.navigate(['/login']);
   }
 }
