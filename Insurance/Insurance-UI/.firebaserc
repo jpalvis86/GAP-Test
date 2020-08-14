@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "jpan-gap-tech-test"
+  },
+  "targets": {
+    "jpan-gap-tech-test": {
+      "hosting": {
+        "Insurance-UI": [
+          "jpan-gap-tech-test"
+        ]
+      }
+    }
+  }
+}

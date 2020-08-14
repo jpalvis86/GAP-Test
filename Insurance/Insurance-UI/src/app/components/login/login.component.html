@@ -1,0 +1,9 @@
+<div class="card" *ngIf="!(fireAuth.authState | async)">
+  <app-email-login></app-email-login>
+</div>
+
+<div *ngIf="fireAuth.authState | async as user" class="logout">
+  <p>
+    Logged in as <strong>{{ user.email }}</strong>
+  </p>
+</div>

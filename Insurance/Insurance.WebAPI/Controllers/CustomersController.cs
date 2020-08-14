@@ -40,7 +40,7 @@ namespace Insurance.WebAPI.Controllers
         }
 
         [HttpGet]
-        [Route(":id")]
+        [Route("{id}")]
         public IActionResult GetCustomer(int id)
         {
             var customer = _customerService.GetById(id);
