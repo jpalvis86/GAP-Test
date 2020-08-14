@@ -5,12 +5,13 @@ import { InsuranceService } from '../../services/insurance.service';
 
 import { ConfirmationService } from 'primeng/api';
 import { MessageService, SelectItem } from 'primeng/api';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-insurances',
   templateUrl: './insurances.component.html',
   styleUrls: ['./insurances.component.scss'],
-  providers: [MessageService, ConfirmationService],
+  providers: [MessageService, ConfirmationService, DatePipe],
 })
 export class InsurancesComponent implements OnInit {
   insurances: Insurance[];
@@ -33,6 +34,7 @@ export class InsurancesComponent implements OnInit {
     { label: 'Lost', value: 'Lost' },
   ];
 
+  selectedDate = '2020-02-22';
   selectedInsurances: Insurance[];
 
   submitted: boolean;
@@ -41,7 +43,8 @@ export class InsurancesComponent implements OnInit {
   constructor(
     private insuranceService: InsuranceService,
     private messageService: MessageService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    public datepipe: DatePipe
   ) {}
 
   ngOnInit(): void {
@@ -62,6 +65,11 @@ export class InsurancesComponent implements OnInit {
 
   editInsurance(insurance: Insurance): void {
     this.insurance = { ...insurance };
+
+    this.selectedDate = this.datepipe.transform(
+      this.insurance.startDate,
+      'yyyy-MM-dd'
+    );
     this.insurance.coverageRate *= 100;
     this.selectedRisk = {
       label: this.insurance.risk,
@@ -156,7 +164,7 @@ export class InsurancesComponent implements OnInit {
       (c) => c.value
     );
 
-    console.log(this.insurance.coverageTypes);
+    this.insurance.startDate = new Date(this.selectedDate);
     this.insurance.coverageRate /= 100;
   }
 }
