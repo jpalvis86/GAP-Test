@@ -20,6 +20,17 @@ import { EmailLoginComponent } from './components/email-login/email-login.compon
 
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
+import { ToastModule } from 'primeng/toast';
+import { CalendarModule } from 'primeng/calendar';
+import { SliderModule } from 'primeng/slider';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { ContextMenuModule } from 'primeng/contextmenu';
+import { DialogModule } from 'primeng/dialog';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { InputTextModule } from 'primeng/inputtext';
+import { ToolbarModule } from 'primeng/toolbar';
 
 @NgModule({
   declarations: [
@@ -41,7 +52,18 @@ import { ButtonModule } from 'primeng/button';
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
     TableModule,
+    CalendarModule,
+    SliderModule,
+    DialogModule,
+    ConfirmDialogModule,
+    MultiSelectModule,
+    ContextMenuModule,
+    DropdownModule,
     ButtonModule,
+    ToastModule,
+    InputTextModule,
+    ProgressBarModule,
+    ToolbarModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

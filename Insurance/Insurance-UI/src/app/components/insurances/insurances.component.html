@@ -1,5 +1,213 @@
-<h1>Available Insurances:</h1>
-<br />
-<ul *ngFor="let insurance of insurances">
-  <li>{{ insurance.id }} - {{ insurance.name }}</li>
-</ul>
+<p-toast></p-toast>
+
+<div class="card">
+  <p-table
+    #dt
+    [value]="insurances"
+    [rows]="10"
+    [paginator]="true"
+    [globalFilterFields]="[
+      'name',
+      'country.name',
+      'representative.name',
+      'status'
+    ]"
+    [(selection)]="selectedInsurances"
+    [rowHover]="true"
+    dataKey="id"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [showCurrentPageReport]="true"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 3rem;">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th pSortableColumn="id">Id <p-sortIcon field="id"></p-sortIcon></th>
+        <th pSortableColumn="name">
+          Name <p-sortIcon field="name"></p-sortIcon>
+        </th>
+        <th pSortableColumn="description">
+          Description <p-sortIcon field="description"></p-sortIcon>
+        </th>
+        <th pSortableColumn="price">
+          Price <p-sortIcon field="price"></p-sortIcon>
+        </th>
+        <th pSortableColumn="risk">
+          Risk <p-sortIcon field="risk"></p-sortIcon>
+        </th>
+        <th pSortableColumn="coverageRate">
+          Rate <p-sortIcon field="coverageRate"></p-sortIcon>
+        </th>
+        <th pSortableColumn="startDate">
+          Start Date <p-sortIcon field="startDate"></p-sortIcon>
+        </th>
+        <th pSortableColumn="monthsOfCoverage">
+          Months <p-sortIcon field="monthsOfCoverage"></p-sortIcon>
+        </th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-insurance>
+      <tr>
+        <td>
+          <p-tableCheckbox [value]="insurance"></p-tableCheckbox>
+        </td>
+        <td>{{ insurance.id }}</td>
+        <td>{{ insurance.name }}</td>
+        <td>{{ insurance.description }}</td>
+        <td>{{ insurance.price | currency: "USD" }}</td>
+        <td>{{ insurance.risk }}</td>
+        <td>{{ insurance.coverageRate | percent }}</td>
+        <td>{{ insurance.startDate | date: "longDate" }}</td>
+        <td>{{ insurance.monthsOfCoverage }}</td>
+        <td>
+          <button
+            pButton
+            pRipple
+            icon="pi pi-pencil"
+            class="p-button-rounded p-button-success p-mr-2"
+            (click)="editInsurance(insurance)"
+          ></button>
+          <button
+            pButton
+            pRipple
+            icon="pi pi-trash"
+            class="p-button-rounded p-button-warning"
+            (click)="deleteInsurance(insurance)"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+      <div class="p-d-flex p-ai-center p-jc-between">
+        In total there are {{ insurances ? insurances.length : 0 }} insurances.
+      </div>
+    </ng-template>
+  </p-table>
+</div>
+
+<p-dialog
+  [(visible)]="insuranceDialog"
+  [style]="{ width: '450px' }"
+  header="Insurance Details"
+  [modal]="true"
+  styleClass="p-fluid"
+>
+  <ng-template pTemplate="content">
+    <img
+      [src]="'assets/showcase/images/demo/insurance/' + insurance.image"
+      [alt]="insurance.image"
+      class="insurance-image"
+      *ngIf="insurance.image"
+    />
+    <div class="p-field">
+      <label for="name">Name</label>
+      <input
+        type="text"
+        pInputText
+        id="name"
+        [(ngModel)]="insurance.name"
+        required
+        autofocus
+      />
+      <small class="p-invalid" *ngIf="submitted && !insurance.name"
+        >Name is required.</small
+      >
+    </div>
+    <div class="p-field">
+      <label for="description">Description</label>
+      <textarea
+        id="description"
+        pInputTextarea
+        [(ngModel)]="insurance.description"
+        required
+        rows="3"
+        cols="20"
+      ></textarea>
+    </div>
+
+    <div class="p-field">
+      <label class="p-mb-3">Category</label>
+      <div class="p-formgrid p-grid">
+        <div class="p-field-radiobutton p-col-6">
+          <p-radioButton
+            id="category1"
+            name="category"
+            value="Accessories"
+            [(ngModel)]="insurance.category"
+          ></p-radioButton>
+          <label for="category1">Accessories</label>
+        </div>
+        <div class="p-field-radiobutton p-col-6">
+          <p-radioButton
+            id="category2"
+            name="category"
+            value="Clothing"
+            [(ngModel)]="insurance.category"
+          ></p-radioButton>
+          <label for="category2">Clothing</label>
+        </div>
+        <div class="p-field-radiobutton p-col-6">
+          <p-radioButton
+            id="category3"
+            name="category"
+            value="Electronics"
+            [(ngModel)]="insurance.category"
+          ></p-radioButton>
+          <label for="category3">Electronics</label>
+        </div>
+        <div class="p-field-radiobutton p-col-6">
+          <p-radioButton
+            id="category4"
+            name="category"
+            value="Fitness"
+            [(ngModel)]="insurance.category"
+          ></p-radioButton>
+          <label for="category4">Fitness</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="p-formgrid p-grid">
+      <div class="p-field p-col">
+        <label for="price">Price</label>
+        <p-inputNumber
+          id="price"
+          [(ngModel)]="insurance.price"
+          mode="currency"
+          currency="USD"
+          locale="en-US"
+        ></p-inputNumber>
+      </div>
+      <div class="p-field p-col">
+        <label for="quantity">Quantity</label>
+        <p-inputNumber
+          id="quantity"
+          [(ngModel)]="insurance.quantity"
+        ></p-inputNumber>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="Cancel"
+      icon="pi pi-times"
+      class="p-button-text"
+      (click)="hideDialog()"
+    ></button>
+    <button
+      pButton
+      pRipple
+      label="Save"
+      icon="pi pi-check"
+      class="p-button-text"
+      (click)="saveInsurance()"
+    ></button>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
