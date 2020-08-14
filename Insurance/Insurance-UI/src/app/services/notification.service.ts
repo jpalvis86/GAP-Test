@@ -23,4 +23,15 @@ export class NotificationService {
       .pipe(tap((_) => this.router.navigate(['/login'])))
       .subscribe();
   }
+
+  showProfileNotification(): any {
+    this.snackBar.open('You must be a supervisor to view this content', 'OK', {
+      duration: 5000,
+    });
+
+    return this.snackBar._openedSnackBarRef
+      .onAction()
+      .pipe(tap((_) => this.router.navigate(['/customers'])))
+      .subscribe();
+  }
 }

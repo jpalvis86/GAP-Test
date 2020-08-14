@@ -5,13 +5,14 @@ import { InsurancesComponent } from './components/insurances/insurances.componen
 import { LoginComponent } from './components/login/login.component';
 
 import { AuthGuard } from './guards/auth.guard';
+import { SupervisorGuard } from './guards/supervisor.guard';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   {
     path: 'insurances',
     component: InsurancesComponent,
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard, SupervisorGuard],
   },
   {
     path: 'customers',
